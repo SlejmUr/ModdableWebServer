@@ -4,6 +4,7 @@ using ModdableWebServer;
 using ModdableWebServer.Servers;
 using NetCoreServer;
 using System.Net.Sockets;
+using System.Reflection;
 
 namespace ConsoleApp
 {
@@ -16,10 +17,19 @@ namespace ConsoleApp
             ResponseSender.SendResponse(serverStruct);
             return true;
         }
+
+        [HTTP("GET", "/test")]
+        public static bool test3333(HttpRequest request, ServerStruct serverStruct)
+        {
+            serverStruct.Response.MakeGetResponse("teseststs");
+            ResponseSender.SendResponse(serverStruct);
+            return true;
+        }
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, World!");
             var server = new WS_Server("127.0.0.1",7777);
+            server.HTTP_AttributeToMethods.Merge(Assembly.GetEntryAssembly());
             server.ReceivedRequestError += ReceivedRequestError;
             server.WSError += WSError;
             server.OnSocketError += OnSocketError;

@@ -1,14 +1,15 @@
-﻿using ModdableWebServer.Attributes;
+﻿#if DEBUG
+using ModdableWebServer.Attributes;
 using ModdableWebServer.Helper;
 using NetCoreServer;
 
 namespace ModdableWebServer
 {
-    /*
+
     public class TEST
     {
 
-        [WS("/ws/{yeet}")]
+        [WS("/ws/{test}")]
         public static void ws(WS_Struct ws_Struct)
         {
             Console.WriteLine("Headers:");
@@ -50,8 +51,8 @@ namespace ModdableWebServer
             return true;
         }
 
-        [HTTP("GET", "/yeet/{test}")]
-        public static bool yeet(HttpRequest request, ServerStruct serverStruct)
+        [HTTP("GET", "/test2/{test}")]
+        public static bool test2(HttpRequest request, ServerStruct serverStruct)
         {
             Console.WriteLine("Headers:");
             foreach (var item in serverStruct.Headers)
@@ -65,11 +66,13 @@ namespace ModdableWebServer
                 Console.WriteLine(item.Key + " = " + item.Value);
             }
 
-            Console.WriteLine("yeet");
-            serverStruct.Response.MakeGetResponse("yeeet");
+            Console.WriteLine("test2");
+            serverStruct.Response.MakeGetResponse("test2");
             ResponseSender.SendResponse(serverStruct);
             return true;
         }
 
-    }*/
+    }
+
 }
+#endif
