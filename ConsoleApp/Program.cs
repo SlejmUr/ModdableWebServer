@@ -43,7 +43,6 @@ namespace ConsoleApp
             Console.ReadLine();
             server.Stop();
             Console.ReadLine();
-            Assembly.GetAssembly
         }
 
         private static void OnSocketError(object? sender, SocketError error)
