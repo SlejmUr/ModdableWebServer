@@ -10,15 +10,15 @@ I am really bad at making a Good Documentation. Please help!
 You only Need to know you can get the Headers, URL Parameters, and can parse a Response to it.
 
 About Headers & Parameters:
-Duplication is been reduced. (Please do not use same parameter in url.)
+Duplication is been reduced. (Please do not use same parameter in url.)\
 Key of it is lowercase
 
 ### Response Creator
 Creating response simple.
 
-Make sure you adding like this:
-Header
-Cookie
+Make sure you adding like this:\
+Header\
+Cookie\
 Body
 
 ```csharp
@@ -50,7 +50,7 @@ If you ever will need, you can use `response.SetResponse`, but not suggesting it
 ```csharp
 [HTTP("Method", "Url")]
 ```
-In Method can be used any HTTP/S Method.
+In Method can be used any HTTP/S Method.\
 GET, POST, HEAD, OPTION, DELETE is accepted.
 
 In the Url you can use the full url, or making it as parameter
@@ -208,27 +208,27 @@ http_server.AttributeToMethods.Override(Assembly.GetEntryAssembly());
 This is so Technical I needed to check like 5 times.
 
 We have 4 Assembly:
-ModdableWebServer (MWS)
-MyServerLib (Lib)
-MyServerExtenstion (Extension)
+ModdableWebServer (MWS)\
+MyServerLib (Lib)\
+MyServerExtenstion (Extension)\
 MyServerConsole (Console)
 
-Console starts a Lib.
-Lib starts MWS.
+Console starts a Lib.\
+Lib starts MWS.\
 Lib starts Extension.
 
-Extenstion Contain a Class: EXT
-Lib Contains a Class: LIBC
+Extenstion Contain a Class: EXT\
+Lib Contains a Class: LIBC\
 Console Contains a Class: CONC
 
-GetEntryAssembly = Console
-GetCallingAssembly On Extension = Lib
-GetCallingAssembly On Lib = Console
-GetExecutingAssembly On Lib = Lib
-GetExecutingAssembly On Extension = Extension
-GetExecutingAssembly On Console = Console
-GetAssembly(typeof(EXT)) = Extension
-GetAssembly(typeof(LIBC)) = Lib
+GetEntryAssembly = Console\
+GetCallingAssembly On Extension = Lib\
+GetCallingAssembly On Lib = Console\
+GetExecutingAssembly On Lib = Lib\
+GetExecutingAssembly On Extension = Extension\
+GetExecutingAssembly On Console = Console\
+GetAssembly(typeof(EXT)) = Extension\
+GetAssembly(typeof(LIBC)) = Lib\
 GetAssembly(typeof(CONC)) = Console
 
 Use the GetAssembly and TypeOf if you dont know what Assembly loaded what!
