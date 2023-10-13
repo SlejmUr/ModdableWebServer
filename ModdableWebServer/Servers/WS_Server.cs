@@ -12,10 +12,10 @@ namespace ModdableWebServer.Servers
         public EventHandler<(HttpRequest request, string error)> ReceivedRequestError;
         public EventHandler<SocketError> OnSocketError;
         public EventHandler<string> WSError;
+        public EventHandler<HttpRequest> ReceivedFailed;
         public event EventHandler<(string address, int port)> Started;
         public event EventHandler Stopped;
         #endregion
-
         public Dictionary<(string url, string method), MethodInfo> HTTP_AttributeToMethods = new();
         public Dictionary<string, MethodInfo> WS_AttributeToMethods = new();
 
@@ -25,6 +25,8 @@ namespace ModdableWebServer.Servers
             HTTP_AttributeToMethods = AttibuteMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
             WS_AttributeToMethods = AttibuteMethodHelper.UrlWSLoader(Assembly.GetAssembly(typeof(WSAttribute)));
         }
+
+        #region Overrides
         protected override void OnStarted() => Started?.Invoke(this, (Address, Port));
 
         protected override void OnStopped() => Stopped?.Invoke(this, null);
@@ -32,30 +34,25 @@ namespace ModdableWebServer.Servers
         protected override TcpSession CreateSession() { return new Session(this); }
 
         protected override void OnError(SocketError error) => OnSocketError?.Invoke(this, error);
+        #endregion
 
         public class Session : WsSession
         {
+            internal WS_Struct ws_Struct;
             public WS_Server WS_Server => (WS_Server)this.Server;
             public Session(WsServer server) : base(server) { }
+
+            #region Overrides
             protected override void OnReceivedRequest(HttpRequest request)
             {
-                Dictionary<string, string> Headers = new();
-                for (int i = 0; i < request.Headers; i++)
-                {
-                    var headerpart = request.Header(i);
-                    if (!Headers.ContainsKey(headerpart.Item1.ToLower()))
-                        Headers.Add(headerpart.Item1.ToLower(), headerpart.Item2);
-                }
-
                 ServerStruct serverStruct = new ServerStruct()
                 {
                     WS_Session = this,
                     Response = this.Response,
                     Enum = ServerEnum.WS
                 };
-
                 
-                if (Headers.ContainsKey("websocket"))
+                if (request.GetHeaders().ContainsKey("websocket"))
                 {
                     base.OnReceivedRequest(request);
                     return;
@@ -63,43 +60,34 @@ namespace ModdableWebServer.Servers
 
                 bool IsSent = RequestSender.SendRequestHTTP(serverStruct, request, WS_Server.HTTP_AttributeToMethods);
 
+                if (!IsSent)
+                    WS_Server.ReceivedFailed?.Invoke(this,request);
+
                 if (WS_Server.DoReturn404IfFail && !IsSent)
                     SendResponse(Response.MakeErrorResponse(404));
 
             }
 
-            WS_Struct ws_Struct;
             public override void OnWsConnected(HttpRequest request)
             {
-                Console.WriteLine("OnWsConnected");
-                Dictionary<string, string> Headers = new();
-                for (int i = 0; i < request.Headers; i++)
-                {
-                    var headerpart = request.Header(i);
-                    if (!Headers.ContainsKey(headerpart.Item1.ToLower()))
-                        Headers.Add(headerpart.Item1.ToLower(), headerpart.Item2);
-                }
-
                 ws_Struct.IsConnected = true;
                 ws_Struct.Request = new()
                 { 
                     Body = request.Body,
                     Url = request.Url,
-                    Headers = Headers
+                    Headers = request.GetHeaders()
                 };
                 RequestSender.SendRequestWS(ws_Struct, WS_Server.WS_AttributeToMethods);
             }
 
             public override void OnWsReceived(byte[] buffer, long offset, long size)
             {
-                Console.WriteLine("OnWsReceived");
                 ws_Struct.WSRequest = new(buffer,offset,size);
                 RequestSender.SendRequestWS(ws_Struct, WS_Server.WS_AttributeToMethods);
             }
 
             public override void OnWsDisconnected()
             {
-                Console.WriteLine("OnWsDisconnected");
                 ws_Struct.IsConnected = false;
                 ws_Struct.WSRequest = null;
                 RequestSender.SendRequestWS(ws_Struct, WS_Server.WS_AttributeToMethods);
@@ -113,6 +101,7 @@ namespace ModdableWebServer.Servers
             protected override void OnReceivedRequestError(HttpRequest request, string error) => WS_Server.ReceivedRequestError?.Invoke(this, (request, error));
 
             protected override void OnError(SocketError error) => WS_Server.OnSocketError?.Invoke(this, error);
+            #endregion
         }
     }
 }

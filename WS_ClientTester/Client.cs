@@ -2,7 +2,7 @@
 using System.Net.Sockets;
 using System.Text;
 
-namespace ModdableWebServer.Servers
+namespace WS_ClientTester
 {
     public class Client : WsClient
     {

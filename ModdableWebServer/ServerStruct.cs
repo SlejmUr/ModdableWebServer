@@ -6,9 +6,9 @@ namespace ModdableWebServer
     public struct ServerStruct
     {
         public HTTP_Server.Session? HTTP_Session;
-        public HTTPS_Server? HTTPS_Session;
+        public HTTPS_Server.Session? HTTPS_Session;
         public WS_Server.Session? WS_Session;
-        public WSS_Server? WSS_Session;
+        public WSS_Server.Session? WSS_Session;
         public HttpResponse Response;
         public Dictionary<string, string> Headers;
         public Dictionary<string, string> Parameters;

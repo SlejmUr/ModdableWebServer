@@ -7,15 +7,7 @@ namespace ModdableWebServer.Helper
     {
         public static bool SendRequestHTTP(ServerStruct servers, HttpRequest request, Dictionary<(string url, string method), MethodInfo> AttributeToMethods)
         {
-            Dictionary<string, string> Headers = new();
             Dictionary<string, string> Parameters = new();
-            Headers.Clear();
-            for (int i = 0; i < request.Headers; i++)
-            {
-                var headerpart = request.Header(i);
-                if (!Headers.ContainsKey(headerpart.Item1.ToLower()))
-                    Headers.Add(headerpart.Item1.ToLower(), headerpart.Item2);
-            }
             string url = request.Url;
             url = Uri.UnescapeDataString(url);
             bool Sent = false;
@@ -23,7 +15,7 @@ namespace ModdableWebServer.Helper
             {
                 if ((UrlHelper.Match(url, item.Key.url, out Parameters) || item.Key.url == url) && request.Method.ToUpper() == item.Key.method.ToUpper())
                 {
-                    servers.Headers = Headers;
+                    servers.Headers = request.GetHeaders();
                     servers.Parameters = Parameters;
                     Sent = (bool)item.Value.Invoke(servers, new object[] { request, servers })!;
                     break;

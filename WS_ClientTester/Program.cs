@@ -1,6 +1,4 @@
-﻿using ModdableWebServer.Servers;
-
-namespace WS_ClientTester
+﻿namespace WS_ClientTester
 {
     internal class Program
     {

@@ -4,6 +4,7 @@ using NetCoreServer;
 
 namespace ModdableWebServer
 {
+    /*
     public class TEST
     {
 
@@ -25,15 +26,6 @@ namespace ModdableWebServer
             Console.WriteLine(ws_Struct.Request.Url);
             Console.WriteLine(ws_Struct.WSRequest?.size);
         }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -79,5 +71,5 @@ namespace ModdableWebServer
             return true;
         }
 
-    }
+    }*/
 }
