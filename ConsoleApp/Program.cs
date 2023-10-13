@@ -5,11 +5,13 @@ using ModdableWebServer.Servers;
 using NetCoreServer;
 using System.Net.Sockets;
 using System.Reflection;
+using System.Security.Authentication;
 
 namespace ConsoleApp
 {
     internal class Program
     {
+
         [HTTP("GET", "/yeet")]
         public static bool yeet(HttpRequest request, ServerStruct serverStruct)
         {
@@ -25,11 +27,13 @@ namespace ConsoleApp
             ResponseSender.SendResponse(serverStruct);
             return true;
         }
+
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, World!");
+            CertHelper.GetContextNoValidate( SslProtocols.Tls12, "mypfx.pfx", "asecurepassword");
             var server = new WS_Server("127.0.0.1",7777);
-            server.HTTP_AttributeToMethods.Merge(Assembly.GetEntryAssembly());
+            server.HTTP_AttributeToMethods.Override(Assembly.GetEntryAssembly());
             server.ReceivedRequestError += ReceivedRequestError;
             server.WSError += WSError;
             server.OnSocketError += OnSocketError;
@@ -39,6 +43,7 @@ namespace ConsoleApp
             Console.ReadLine();
             server.Stop();
             Console.ReadLine();
+            Assembly.GetAssembly
         }
 
         private static void OnSocketError(object? sender, SocketError error)

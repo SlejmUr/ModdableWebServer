@@ -10,7 +10,7 @@ namespace ModdableWebServer
     {
 
         [WS("/ws/{test}")]
-        public static void ws(WS_Struct ws_Struct)
+        public static void ws(WebSocketStruct ws_Struct)
         {
             Console.WriteLine("Headers:");
             foreach (var item in ws_Struct.Request.Headers)
@@ -25,6 +25,8 @@ namespace ModdableWebServer
             }
             Console.WriteLine(ws_Struct.IsConnected);
             Console.WriteLine(ws_Struct.Request.Url);
+            Console.WriteLine(ws_Struct.WSRequest?.buffer);
+            Console.WriteLine(ws_Struct.WSRequest?.offset);
             Console.WriteLine(ws_Struct.WSRequest?.size);
         }
 
@@ -67,7 +69,13 @@ namespace ModdableWebServer
             }
 
             Console.WriteLine("test2");
-            serverStruct.Response.MakeGetResponse("test2");
+            ResponseCreator response = new();
+            response.SetHeaders(new Dictionary<string, string>() 
+            {
+                { "key", "Value" }
+            });
+            response.SetBody("this is a proper test, and making things");
+            serverStruct.Response = response.GetResponse();
             ResponseSender.SendResponse(serverStruct);
             return true;
         }

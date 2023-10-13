@@ -4,7 +4,30 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Title>$(AssemblyName)</Title>
+    <Authors>SlejmUr</Authors>
+    <Company>SlejmUr</Company>
+    <Description>Moddable Web Server Library</Description>
+    <Copyright>SlejmUr</Copyright>
+    <PackageProjectUrl>https://github.com/SlejmUr/ModdableWebServer</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/SlejmUr/ModdableWebServer</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>ModdableWebServer;webserver;web</PackageTags>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageReleaseNotes>1.0!</PackageReleaseNotes>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="NetCoreServer" Version="6.7.0" />

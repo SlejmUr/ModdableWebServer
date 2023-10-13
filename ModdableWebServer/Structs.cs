@@ -15,11 +15,14 @@ namespace ModdableWebServer
         public ServerEnum Enum;
     }
 
-    public struct WS_Struct
+    public struct WebSocketStruct
     {
         public bool IsConnected;
         public Req Request;
         public (byte[] buffer, long offset, long size)? WSRequest;
+        public WS_Server.Session? WS_Session;
+        public WSS_Server.Session? WSS_Session;
+        public WSEnum Enum;
     }
 
     public struct Req
@@ -34,6 +37,12 @@ namespace ModdableWebServer
     { 
         HTTP,
         HTTPS,
+        WS,
+        WSS
+    };
+
+    public enum WSEnum
+    {
         WS,
         WSS
     };

@@ -38,7 +38,7 @@ namespace ModdableWebServer.Servers
 
         public class Session : WsSession
         {
-            internal WS_Struct ws_Struct;
+            internal WebSocketStruct ws_Struct;
             public WS_Server WS_Server => (WS_Server)this.Server;
             public Session(WsServer server) : base(server) { }
 
@@ -70,12 +70,19 @@ namespace ModdableWebServer.Servers
 
             public override void OnWsConnected(HttpRequest request)
             {
-                ws_Struct.IsConnected = true;
-                ws_Struct.Request = new()
-                { 
-                    Body = request.Body,
-                    Url = request.Url,
-                    Headers = request.GetHeaders()
+                ws_Struct = new()
+                {
+                    IsConnected = true,
+                    Request = new()
+                    {
+                        Body = request.Body,
+                        Url = request.Url,
+                        Headers = request.GetHeaders()
+                    },
+                    WSRequest = null,
+                    Enum = WSEnum.WS,
+                    WS_Session = this,
+                    WSS_Session = null
                 };
                 RequestSender.SendRequestWS(ws_Struct, WS_Server.WS_AttributeToMethods);
             }

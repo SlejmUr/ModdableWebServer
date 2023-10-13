@@ -1,4 +1,6 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using NetCoreServer;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 namespace ModdableWebServer.Helper
 {
@@ -14,5 +16,20 @@ namespace ModdableWebServer.Helper
 
             return new X509Certificate2(File.ReadAllBytes(pfxPath), password);
         }
+
+        public static SslContext GetContext(System.Security.Authentication.SslProtocols sslprotocol, string pfxPath, string password)
+        {
+            return new SslContext(sslprotocol, GetCert(pfxPath, password));
+        }
+        public static SslContext GetContextNoValidate(System.Security.Authentication.SslProtocols sslprotocol, string pfxPath, string password)
+        {
+            return new SslContext(sslprotocol, GetCert(pfxPath, password), new RemoteCertificateValidationCallback(ValidateServerCertificate));
+        }
+
+        public static bool ValidateServerCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        {
+            return true;
+        }
+
     }
 }

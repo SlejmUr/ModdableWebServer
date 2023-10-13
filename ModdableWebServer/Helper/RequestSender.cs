@@ -25,7 +25,7 @@ namespace ModdableWebServer.Helper
             return Sent;
         }
 
-        public static void SendRequestWS(WS_Struct wsStruct, Dictionary<string, MethodInfo> wsMethods)
+        public static void SendRequestWS(WebSocketStruct wsStruct, Dictionary<string, MethodInfo> wsMethods)
         {
             Dictionary<string, string> Parameters = new();
             foreach (var item in wsMethods)
