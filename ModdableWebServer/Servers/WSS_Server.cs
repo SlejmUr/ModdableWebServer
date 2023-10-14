@@ -22,8 +22,8 @@ namespace ModdableWebServer.Servers
         public bool DoReturn404IfFail = true;
         public WSS_Server(SslContext context, string address, int port) : base(context, address, port)
         {
-            HTTP_AttributeToMethods = AttibuteMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
-            WS_AttributeToMethods = AttibuteMethodHelper.UrlWSLoader(Assembly.GetAssembly(typeof(WSAttribute)));
+            HTTP_AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
+            WS_AttributeToMethods = AttributeMethodHelper.UrlWSLoader(Assembly.GetAssembly(typeof(WSAttribute)));
         }
         #region Overrides
         protected override void OnStarted() => Started?.Invoke(this, (Address, Port));
@@ -51,13 +51,15 @@ namespace ModdableWebServer.Servers
                     Enum = ServerEnum.WSS
                 };
 
-                if (request.GetHeaders().ContainsKey("websocket"))
+                if (request.GetHeaders().ContainsValue("websocket"))
                 {
+                    DebugPrinter.Debug("[WssSession.OnReceivedRequest] websocket Value on Headers Send back to base!");
                     base.OnReceivedRequest(request);
                     return;
                 }
 
                 bool IsSent = RequestSender.SendRequestHTTP(serverStruct, request, WSS_Server.HTTP_AttributeToMethods);
+                DebugPrinter.Debug("[WssSession.OnReceivedRequest] Request sent!");
 
                 if (!IsSent)
                     WSS_Server.ReceivedFailed?.Invoke(this, request);
@@ -71,6 +73,7 @@ namespace ModdableWebServer.Servers
             {
                 ws_Struct = new()
                 {
+                    IsConnecting = false,
                     IsConnected = true,
                     Request = new()
                     {
@@ -82,20 +85,44 @@ namespace ModdableWebServer.Servers
                     Enum = WSEnum.WSS,
                     WS_Session = null,
                     WSS_Session = this
+                }; 
+                DebugPrinter.Debug("[WssSession.OnWsConnected] Request sent!");
+                RequestSender.SendRequestWS(ws_Struct, WSS_Server.WS_AttributeToMethods);
+            }
+
+            public override void OnWsConnecting(HttpRequest request)
+            {
+                ws_Struct = new()
+                {
+                    IsConnecting = true,
+                    IsConnected = false,
+                    Request = new()
+                    {
+                        Body = request.Body,
+                        Url = request.Url,
+                        Headers = request.GetHeaders()
+                    },
+                    WSRequest = null,
+                    Enum = WSEnum.WSS,
+                    WS_Session = null,
+                    WSS_Session = this
                 };
+                DebugPrinter.Debug("[WssSession.OnWsConnecting] Request sent!");
                 RequestSender.SendRequestWS(ws_Struct, WSS_Server.WS_AttributeToMethods);
             }
 
             public override void OnWsReceived(byte[] buffer, long offset, long size)
             {
                 ws_Struct.WSRequest = new(buffer, offset, size);
+                DebugPrinter.Debug("[WssSession.OnWsReceived] Request sent!");
                 RequestSender.SendRequestWS(ws_Struct, WSS_Server.WS_AttributeToMethods);
             }
 
             public override void OnWsDisconnected()
             {
                 ws_Struct.IsConnected = false;
-                ws_Struct.WSRequest = null;
+                ws_Struct.WSRequest = null; 
+                DebugPrinter.Debug("[WssSession.OnWsDisconnected] Request sent!");
                 RequestSender.SendRequestWS(ws_Struct, WSS_Server.WS_AttributeToMethods);
             }
 

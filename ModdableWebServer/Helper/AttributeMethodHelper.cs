@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace ModdableWebServer.Helper
 {
-    public static class AttibuteMethodHelper
+    public static class AttributeMethodHelper
     {
         public static Dictionary<(string url, string method), MethodInfo> UrlHTTPLoader(Assembly? assembly)
         {
@@ -20,6 +20,7 @@ namespace ModdableWebServer.Helper
                 var httpAttr = method.GetCustomAttribute<HTTPAttribute>();
                 if (httpAttr == null)
                     continue;
+                DebugPrinter.Debug($"[UrlHTTPLoader] {httpAttr.method}, {httpAttr.url} = {method}");
                 ret.Add((httpAttr.url, httpAttr.method), method);
             }
 
@@ -41,6 +42,7 @@ namespace ModdableWebServer.Helper
                 var httpAttr = method.GetCustomAttribute<WSAttribute>();
                 if (httpAttr == null)
                     continue;
+                DebugPrinter.Debug($"[UrlWSLoader] {httpAttr.url} = {method}");
                 ret.Add(httpAttr.url, method);
             }
 
@@ -65,6 +67,8 @@ namespace ModdableWebServer.Helper
                 { 
                     Console.WriteLine($"Cannot merge {httpAttr.method} ,{httpAttr.url}.");
                 }
+                else
+                    DebugPrinter.Debug($"[Merge HTTP] {httpAttr.method}, {httpAttr.url} = {method}");
             }
         }
 
@@ -87,6 +91,8 @@ namespace ModdableWebServer.Helper
                 {
                     Console.WriteLine($"Cannot merge {httpAttr.url}.");
                 }
+                else
+                    DebugPrinter.Debug($"[Merge WS] {httpAttr.url} = {method}");
             }
         }
 
@@ -112,6 +118,8 @@ namespace ModdableWebServer.Helper
                 {
                     throw new Exception("KeyValues adding was not possible (Even after removed old data)");
                 }
+                else
+                    DebugPrinter.Debug($"[Override HTTP] {httpAttr.method}, {httpAttr.url} = {method}");
             }
         }
 
@@ -136,6 +144,8 @@ namespace ModdableWebServer.Helper
                 {
                     throw new Exception("KeyValues adding was not possible (Even after removed old data)");
                 }
+                else
+                    DebugPrinter.Debug($"[Override WS] {httpAttr.url} = {method}");
             }
         }
     }

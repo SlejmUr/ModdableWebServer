@@ -15,9 +15,11 @@ namespace ModdableWebServer.Helper
             {
                 if ((UrlHelper.Match(url, item.Key.url, out Parameters) || item.Key.url == url) && request.Method.ToUpper() == item.Key.method.ToUpper())
                 {
+                    DebugPrinter.Debug($"[SendRequestHTTP] URL Matched! {url}");
                     servers.Headers = request.GetHeaders();
                     servers.Parameters = Parameters;
                     Sent = (bool)item.Value.Invoke(servers, new object[] { request, servers })!;
+                    DebugPrinter.Debug("[SendRequestHTTP] Invoked!");
                     break;
                 }
 
@@ -32,8 +34,10 @@ namespace ModdableWebServer.Helper
             {
                 if (UrlHelper.Match(wsStruct.Request.Url, item.Key, out Parameters) || item.Key == wsStruct.Request.Url)
                 {
+                    DebugPrinter.Debug($"[SendRequestWS] URL Matched! {wsStruct.Request.Url}");
                     wsStruct.Request.Parameters = Parameters;
                     _ = item.Value.Invoke(wsStruct, new object[] { wsStruct })!;
+                    DebugPrinter.Debug("[SendRequestWS] Invoked!");
                     break;
                 }
 

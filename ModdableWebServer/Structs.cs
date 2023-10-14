@@ -17,6 +17,7 @@ namespace ModdableWebServer
 
     public struct WebSocketStruct
     {
+        public bool IsConnecting;
         public bool IsConnected;
         public Req Request;
         public (byte[] buffer, long offset, long size)? WSRequest;

@@ -21,7 +21,7 @@ namespace ModdableWebServer.Servers
         public bool DoReturn404IfFail = true;
         public HTTPS_Server(SslContext context, IPAddress address, int port) : base(context, address, port) 
         {
-            AttributeToMethods = AttibuteMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
+            AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
         }
 
         #region Overrides
@@ -50,6 +50,7 @@ namespace ModdableWebServer.Servers
                 };
 
                 bool IsSent = RequestSender.SendRequestHTTP(serverStruct, request, HTTPS_Server.AttributeToMethods);
+                DebugPrinter.Debug("[HttpsSession.OnReceivedRequest] Request sent!");
 
                 if (!IsSent)
                     HTTPS_Server.ReceivedFailed?.Invoke(this, request);

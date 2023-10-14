@@ -8,15 +8,19 @@
             {
                 case ServerEnum.HTTP:
                     serverStruct.HTTP_Session?.SendResponse(serverStruct.Response);
+                    DebugPrinter.Debug("[SendResponse] HTTP Response Sent!");
                     break;
                 case ServerEnum.HTTPS:
                     serverStruct.HTTPS_Session?.SendResponse(serverStruct.Response);
+                    DebugPrinter.Debug("[SendResponse] HTTPS Response Sent!");
                     break;
                 case ServerEnum.WS:
                     serverStruct.WS_Session?.SendResponse(serverStruct.Response);
+                    DebugPrinter.Debug("[SendResponse] WS Response Sent!");
                     break;
                 case ServerEnum.WSS:
                     serverStruct.WSS_Session?.SendResponse(serverStruct.Response);
+                    DebugPrinter.Debug("[SendResponse] WSS Response Sent!");
                     break;
                 default:
                     break;
