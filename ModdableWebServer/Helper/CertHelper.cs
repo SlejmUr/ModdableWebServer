@@ -26,7 +26,7 @@ namespace ModdableWebServer.Helper
             return new SslContext(sslprotocol, GetCert(pfxPath, password), new RemoteCertificateValidationCallback(ValidateServerCertificate));
         }
 
-        public static bool ValidateServerCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        public static bool ValidateServerCertificate(object? sender, X509Certificate? certificate, X509Chain? chain, SslPolicyErrors sslPolicyErrors)
         {
             return true;
         }

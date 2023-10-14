@@ -72,8 +72,8 @@ public static bool test(HttpRequest request, ServerStruct serverStruct)
 {
 	//simple response making
 	serverStruct.Response.MakeOkResponse();
-	//Make sure you use this as it.
-	ResponseSender.SendResponse(serverStruct);
+	//And sending the response.
+	serverStruct.SendResponse();
 	//return is if the page exist or not. It will try to send 404 if false.
 	return true;
 }

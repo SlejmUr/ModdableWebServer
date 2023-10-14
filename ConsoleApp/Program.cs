@@ -16,7 +16,7 @@ namespace ConsoleApp
         public static bool yeet(HttpRequest request, ServerStruct serverStruct)
         {
             serverStruct.Response.MakeGetResponse("yeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeet");
-            ResponseSender.SendResponse(serverStruct);
+            serverStruct.SendResponse();
             return true;
         }
 
@@ -24,7 +24,7 @@ namespace ConsoleApp
         public static bool test3333(HttpRequest request, ServerStruct serverStruct)
         {
             serverStruct.Response.MakeGetResponse("teseststs");
-            ResponseSender.SendResponse(serverStruct);
+            serverStruct.SendResponse();
             return true;
         }
 

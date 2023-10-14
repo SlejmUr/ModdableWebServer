@@ -26,7 +26,7 @@ namespace ModdableWebServer.Servers
         #region Overrides
         protected override void OnStarted() => Started?.Invoke(this, (Address, Port));
 
-        protected override void OnStopped() => Stopped?.Invoke(this, null);
+        protected override void OnStopped() => Stopped?.Invoke(this, new());
 
         protected override TcpSession CreateSession() { return new Session(this); }
 

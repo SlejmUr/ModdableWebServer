@@ -1,8 +1,8 @@
 ﻿namespace ModdableWebServer.Helper
 {
-    public class ResponseSender
+    public static class ResponseSender
     {
-        public static void SendResponse(ServerStruct serverStruct)
+        public static void SendResponse(this ServerStruct serverStruct)
         {
             switch (serverStruct.Enum)
             {
