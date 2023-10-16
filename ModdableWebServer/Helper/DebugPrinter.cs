@@ -5,6 +5,7 @@ namespace ModdableWebServer.Helper
     public class DebugPrinter
     {
         public static bool PrintToConsole = false;
+        public static bool EnableLogs = false;
         public static L logger = new(true,directory: "mws_logs");
 
         public static void Debug(string ToPrint, string prefix = "DEBUG")
@@ -14,12 +15,12 @@ namespace ModdableWebServer.Helper
 
         static void Print(string ToPrint, string prefix)
         {
-            if (PrintToConsole)
+            if (PrintToConsole && EnableLogs)
             {
                 Console.WriteLine($"[{prefix}] {ToPrint}");
                 logger.Log(prefix, ToPrint == null ? "NULL" : ToPrint);
             }
-            else
+            else if (EnableLogs)
             {
                 logger.Log(prefix, ToPrint == null ? "NULL" : ToPrint);
             }

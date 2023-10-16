@@ -33,11 +33,11 @@ namespace ModdableWebServer.Helper
             response.SetBegin(status);
         }
 
-        public void SetHeaders(Dictionary<string, string> kv)
+        public void SetHeaders(Dictionary<string, string> Headers)
         {
-            foreach (var item in kv)
+            foreach (var Header in Headers)
             {
-                SetHeader(item.Key, item.Value);
+                SetHeader(Header.Key, Header.Value);
             }
         }
 

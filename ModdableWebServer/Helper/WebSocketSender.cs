@@ -62,7 +62,7 @@
             }
         }
 
-        public static void MulticastWebSocketText(this WebSocketStruct socketStruct, int status, string text)
+        public static void MulticastWebSocketText(this WebSocketStruct socketStruct, string text)
         {
             if (socketStruct.WSRequest != null)
             {
@@ -82,7 +82,7 @@
             }
         }
 
-        public static void MulticastWebSocketBinary(this WebSocketStruct socketStruct, int status, byte[] bytes)
+        public static void MulticastWebSocketBinary(this WebSocketStruct socketStruct, byte[] bytes)
         {
             if (socketStruct.WSRequest != null)
             {
