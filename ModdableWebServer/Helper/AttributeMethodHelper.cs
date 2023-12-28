@@ -64,7 +64,7 @@ namespace ModdableWebServer.Helper
                 if (httpAttr == null)
                     continue;
                 if (!keyValues.TryAdd((httpAttr.url, httpAttr.method), method))
-                { 
+                {
                     Console.WriteLine($"Cannot merge {httpAttr.method} ,{httpAttr.url}.");
                 }
                 else

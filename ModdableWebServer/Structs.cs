@@ -35,7 +35,7 @@ namespace ModdableWebServer
     }
 
     public enum ServerEnum
-    { 
+    {
         HTTP,
         HTTPS,
         WS,

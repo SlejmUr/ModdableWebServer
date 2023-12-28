@@ -1,8 +1,8 @@
-﻿using NetCoreServer;
+﻿using ModdableWebServer.Attributes;
+using ModdableWebServer.Helper;
+using NetCoreServer;
 using System.Net.Sockets;
 using System.Reflection;
-using ModdableWebServer.Helper;
-using ModdableWebServer.Attributes;
 
 namespace ModdableWebServer.Servers
 {
@@ -42,11 +42,11 @@ namespace ModdableWebServer.Servers
             protected override void OnReceivedRequest(HttpRequest request)
             {
                 ServerStruct serverStruct = new ServerStruct()
-                { 
+                {
                     HTTP_Session = this,
                     Response = this.Response,
                     Enum = ServerEnum.HTTP
-                }; 
+                };
 
                 bool IsSent = RequestSender.SendRequestHTTP(serverStruct, request, HTTP_Server.AttributeToMethods);
                 DebugPrinter.Debug("[HttpSession.OnReceivedRequest] Request sent!");

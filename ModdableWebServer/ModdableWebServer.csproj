@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+	<TargetFrameworks>net6.0;net8.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Title>$(AssemblyName)</Title>
@@ -15,10 +15,10 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>ModdableWebServer;webserver;web</PackageTags>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <PackageReleaseNotes>1.1.1!</PackageReleaseNotes>
-    <Version>1.1.1</Version>
-    <FileVersion>1.1.1</FileVersion>
-    <AssemblyVersion>1.1.1</AssemblyVersion>
+    <PackageReleaseNotes>1.2.0!</PackageReleaseNotes>
+    <Version>1.2.0</Version>
+    <FileVersion>1.2.0</FileVersion>
+    <AssemblyVersion>1.2.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,9 +32,14 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
     <PackageReference Include="L" Version="5.0.0" />
     <PackageReference Include="NetCoreServer" Version="6.7.0" />
   </ItemGroup>
+
+<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+	<PackageReference Include="L" Version="5.0.0" />
+	<PackageReference Include="NetCoreServer" Version="8.0.7" />
+</ItemGroup>
 
 </Project>

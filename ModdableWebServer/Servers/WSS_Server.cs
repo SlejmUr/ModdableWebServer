@@ -1,20 +1,20 @@
-﻿using NetCoreServer;
+﻿using ModdableWebServer.Attributes;
+using ModdableWebServer.Helper;
+using NetCoreServer;
 using System.Net.Sockets;
 using System.Reflection;
-using ModdableWebServer.Helper;
-using ModdableWebServer.Attributes;
 
 namespace ModdableWebServer.Servers
 {
     public class WSS_Server : WssServer
     {
         #region Events
-        public EventHandler<(HttpRequest request, string error)> ReceivedRequestError;
-        public EventHandler<SocketError> OnSocketError;
-        public EventHandler<string> WSError;
-        public EventHandler<HttpRequest> ReceivedFailed;
-        public event EventHandler<(string address, int port)> Started;
-        public event EventHandler Stopped;
+        public EventHandler<(HttpRequest request, string error)>? ReceivedRequestError = null;
+        public EventHandler<SocketError>? OnSocketError = null;
+        public EventHandler<string>? WSError = null;
+        public EventHandler<HttpRequest>? ReceivedFailed = null;
+        public event EventHandler<(string address, int port)>? Started = null;
+        public event EventHandler? Stopped = null;
         #endregion
         public Dictionary<(string url, string method), MethodInfo> HTTP_AttributeToMethods = new();
         public Dictionary<string, MethodInfo> WS_AttributeToMethods = new();
@@ -85,7 +85,7 @@ namespace ModdableWebServer.Servers
                     Enum = WSEnum.WSS,
                     WS_Session = null,
                     WSS_Session = this
-                }; 
+                };
                 DebugPrinter.Debug("[WssSession.OnWsConnected] Request sent!");
                 RequestSender.SendRequestWS(ws_Struct, WSS_Server.WS_AttributeToMethods);
             }
@@ -121,7 +121,7 @@ namespace ModdableWebServer.Servers
             public override void OnWsDisconnected()
             {
                 ws_Struct.IsConnected = false;
-                ws_Struct.WSRequest = null; 
+                ws_Struct.WSRequest = null;
                 DebugPrinter.Debug("[WssSession.OnWsDisconnected] Request sent!");
                 RequestSender.SendRequestWS(ws_Struct, WSS_Server.WS_AttributeToMethods);
             }

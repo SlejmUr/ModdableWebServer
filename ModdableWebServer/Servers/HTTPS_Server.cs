@@ -1,25 +1,25 @@
-﻿using NetCoreServer;
+﻿using ModdableWebServer.Attributes;
+using ModdableWebServer.Helper;
+using NetCoreServer;
+using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
-using ModdableWebServer.Helper;
-using ModdableWebServer.Attributes;
-using System.Net;
 
 namespace ModdableWebServer.Servers
 {
     public class HTTPS_Server : HttpsServer
     {
         #region Events
-        public EventHandler<(HttpRequest request, string error)> ReceivedRequestError;
-        public EventHandler<SocketError> OnSocketError;
-        public EventHandler<HttpRequest> ReceivedFailed;
-        public event EventHandler<(string address, int port)> Started;
-        public event EventHandler Stopped;
+        public EventHandler<(HttpRequest request, string error)>? ReceivedRequestError = null;
+        public EventHandler<SocketError>? OnSocketError = null;
+        public EventHandler<HttpRequest>? ReceivedFailed = null;
+        public event EventHandler<(string address, int port)>? Started = null;
+        public event EventHandler? Stopped = null;
         #endregion
         public Dictionary<(string url, string method), MethodInfo> AttributeToMethods = new();
 
         public bool DoReturn404IfFail = true;
-        public HTTPS_Server(SslContext context, IPAddress address, int port) : base(context, address, port) 
+        public HTTPS_Server(SslContext context, IPAddress address, int port) : base(context, address, port)
         {
             AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
         }

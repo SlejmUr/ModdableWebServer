@@ -1,4 +1,6 @@
-﻿namespace ModdableWebServer.Helper
+﻿using NetCoreServer;
+
+namespace ModdableWebServer.Helper
 {
     public static class ResponseSender
     {
@@ -25,7 +27,31 @@
                 default:
                     break;
             }
+        }
 
+        public static void SendResponse(this ServerStruct serverStruct, HttpResponse response)
+        {
+            switch (serverStruct.Enum)
+            {
+                case ServerEnum.HTTP:
+                    serverStruct.HTTP_Session?.SendResponse(response);
+                    DebugPrinter.Debug("[SendResponse] HTTP Response Sent!");
+                    break;
+                case ServerEnum.HTTPS:
+                    serverStruct.HTTPS_Session?.SendResponse(response);
+                    DebugPrinter.Debug("[SendResponse] HTTPS Response Sent!");
+                    break;
+                case ServerEnum.WS:
+                    serverStruct.WS_Session?.SendResponse(response);
+                    DebugPrinter.Debug("[SendResponse] WS Response Sent!");
+                    break;
+                case ServerEnum.WSS:
+                    serverStruct.WSS_Session?.SendResponse(response);
+                    DebugPrinter.Debug("[SendResponse] WSS Response Sent!");
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
