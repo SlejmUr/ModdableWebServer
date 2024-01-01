@@ -15,12 +15,11 @@ namespace ModdableWebServer.Helper
 
         static void Print(string ToPrint, string prefix)
         {
-            if (PrintToConsole && EnableLogs)
+            if (PrintToConsole)
             {
                 Console.WriteLine($"[{prefix}] {ToPrint}");
-                logger.Log(prefix, ToPrint == null ? "NULL" : ToPrint);
             }
-            else if (EnableLogs)
+            if (EnableLogs)
             {
                 logger.Log(prefix, ToPrint == null ? "NULL" : ToPrint);
             }

@@ -49,7 +49,7 @@ namespace ModdableWebServer.Servers
                     Enum = ServerEnum.HTTPS
                 };
 
-                bool IsSent = RequestSender.SendRequestHTTP(serverStruct, request, HTTPS_Server.AttributeToMethods);
+                bool IsSent = serverStruct.SendRequestHTTP(request, HTTPS_Server.AttributeToMethods);
                 DebugPrinter.Debug("[HttpsSession.OnReceivedRequest] Request sent!");
 
                 if (!IsSent)

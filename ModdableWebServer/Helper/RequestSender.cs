@@ -3,9 +3,9 @@ using System.Reflection;
 
 namespace ModdableWebServer.Helper
 {
-    public class RequestSender
+    public static class RequestSender
     {
-        public static bool SendRequestHTTP(ServerStruct servers, HttpRequest request, Dictionary<(string url, string method), MethodInfo> AttributeToMethods)
+        public static bool SendRequestHTTP(this ServerStruct server, HttpRequest request, Dictionary<(string url, string method), MethodInfo> AttributeToMethods)
         {
             Dictionary<string, string> Parameters = new();
             string url = request.Url;
@@ -16,9 +16,9 @@ namespace ModdableWebServer.Helper
                 if ((UrlHelper.Match(url, item.Key.url, out Parameters) || item.Key.url == url) && request.Method.ToUpper() == item.Key.method.ToUpper())
                 {
                     DebugPrinter.Debug($"[SendRequestHTTP] URL Matched! {url}");
-                    servers.Headers = request.GetHeaders();
-                    servers.Parameters = Parameters;
-                    Sent = (bool)item.Value.Invoke(servers, new object[] { request, servers })!;
+                    server.Headers = request.GetHeaders();
+                    server.Parameters = Parameters;
+                    Sent = (bool)item.Value.Invoke(server, new object[] { request, server })!;
                     DebugPrinter.Debug("[SendRequestHTTP] Invoked!");
                     break;
                 }
@@ -27,7 +27,7 @@ namespace ModdableWebServer.Helper
             return Sent;
         }
 
-        public static void SendRequestWS(WebSocketStruct wsStruct, Dictionary<string, MethodInfo> wsMethods)
+        public static void SendRequestWS(this WebSocketStruct wsStruct, Dictionary<string, MethodInfo> wsMethods)
         {
             Dictionary<string, string> Parameters = new();
             foreach (var item in wsMethods)

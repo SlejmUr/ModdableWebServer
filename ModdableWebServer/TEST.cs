@@ -5,7 +5,6 @@ using NetCoreServer;
 
 namespace ModdableWebServer
 {
-
     public class TEST
     {
 
@@ -23,7 +22,9 @@ namespace ModdableWebServer
             {
                 Console.WriteLine(item.Key + " = " + item.Value);
             }
-            Console.WriteLine(ws_Struct.IsConnected);
+            Console.WriteLine("IsConnected: " + ws_Struct.IsConnected);
+            Console.WriteLine("IsConnecting: " + ws_Struct.IsConnecting);
+            Console.WriteLine("IsClosed: " + ws_Struct.IsClosed);
             Console.WriteLine(ws_Struct.Request.Url);
             Console.WriteLine(ws_Struct.WSRequest?.buffer);
             Console.WriteLine(ws_Struct.WSRequest?.offset);

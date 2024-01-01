@@ -52,6 +52,8 @@ namespace ModdableWebServer.Servers
                     Enum = ServerEnum.WS
                 };
 
+                //  this could check
+                //  if (request.GetHeaders()["upgrade"] == "websocket" && request.GetHeaders()["connection"] == "Upgrade")
                 if (request.GetHeaders().ContainsValue("websocket"))
                 {
                     DebugPrinter.Debug("[WsSession.OnReceivedRequest] websocket Value on Headers Send back to base!");
@@ -59,7 +61,7 @@ namespace ModdableWebServer.Servers
                     return;
                 }
 
-                bool IsSent = RequestSender.SendRequestHTTP(serverStruct, request, WS_Server.HTTP_AttributeToMethods);
+                bool IsSent = serverStruct.SendRequestHTTP(request, WS_Server.HTTP_AttributeToMethods);
                 DebugPrinter.Debug("[WsSession.OnReceivedRequest] Request sent!");
 
                 if (!IsSent)
@@ -88,7 +90,7 @@ namespace ModdableWebServer.Servers
                     WSS_Session = null
                 };
                 DebugPrinter.Debug("[WsSession.OnWsConnected] Request sent!");
-                RequestSender.SendRequestWS(ws_Struct, WS_Server.WS_AttributeToMethods);
+                ws_Struct.SendRequestWS(WS_Server.WS_AttributeToMethods);
             }
 
             public override void OnWsConnecting(HttpRequest request)
@@ -97,6 +99,7 @@ namespace ModdableWebServer.Servers
                 {
                     IsConnecting = true,
                     IsConnected = false,
+                    IsClosed = false,
                     Request = new()
                     {
                         Body = request.Body,
@@ -109,22 +112,48 @@ namespace ModdableWebServer.Servers
                     WSS_Session = null
                 };
                 DebugPrinter.Debug("[WsSession.OnWsConnecting] Request sent!");
-                RequestSender.SendRequestWS(ws_Struct, WS_Server.WS_AttributeToMethods);
+                ws_Struct.SendRequestWS(WS_Server.WS_AttributeToMethods);
             }
+
+            public override bool OnWsConnecting(HttpRequest request, HttpResponse response)
+            {
+                ws_Struct = new()
+                {
+                    IsConnecting = true,
+                    IsConnected = false,
+                    IsClosed = false,
+                    Request = new()
+                    {
+                        Body = request.Body,
+                        Url = request.Url,
+                        Headers = request.GetHeaders()
+                    },
+                    WSRequest = null,
+                    Enum = WSEnum.WS,
+                    WS_Session = this,
+                    WSS_Session = null
+                };
+                DebugPrinter.Debug("[WsSession.OnWsConnecting] Request sent!");
+                ws_Struct.SendRequestWS(WS_Server.WS_AttributeToMethods);
+                return base.OnWsConnecting(request, response);
+            }
+
 
             public override void OnWsReceived(byte[] buffer, long offset, long size)
             {
                 ws_Struct.WSRequest = new(buffer, offset, size);
                 DebugPrinter.Debug("[WsSession.OnWsReceived] Request sent!");
-                RequestSender.SendRequestWS(ws_Struct, WS_Server.WS_AttributeToMethods);
+                ws_Struct.SendRequestWS(WS_Server.WS_AttributeToMethods);
             }
 
             public override void OnWsDisconnected()
             {
+                ws_Struct.IsConnecting = false;
                 ws_Struct.IsConnected = false;
+                ws_Struct.IsClosed = true;
                 ws_Struct.WSRequest = null;
                 DebugPrinter.Debug("[WsSession.OnWsDisconnected] Request sent!");
-                RequestSender.SendRequestWS(ws_Struct, WS_Server.WS_AttributeToMethods);
+                ws_Struct.SendRequestWS(WS_Server.WS_AttributeToMethods);
             }
 
             public override void OnWsError(string error)

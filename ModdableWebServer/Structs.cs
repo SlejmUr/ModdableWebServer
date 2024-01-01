@@ -19,6 +19,7 @@ namespace ModdableWebServer
     {
         public bool IsConnecting;
         public bool IsConnected;
+        public bool IsClosed;
         public Req Request;
         public (byte[] buffer, long offset, long size)? WSRequest;
         public WS_Server.Session? WS_Session;

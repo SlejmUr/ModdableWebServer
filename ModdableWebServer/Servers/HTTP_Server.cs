@@ -48,7 +48,7 @@ namespace ModdableWebServer.Servers
                     Enum = ServerEnum.HTTP
                 };
 
-                bool IsSent = RequestSender.SendRequestHTTP(serverStruct, request, HTTP_Server.AttributeToMethods);
+                bool IsSent = serverStruct.SendRequestHTTP(request, HTTP_Server.AttributeToMethods);
                 DebugPrinter.Debug("[HttpSession.OnReceivedRequest] Request sent!");
 
                 if (!IsSent)

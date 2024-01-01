@@ -4,7 +4,7 @@
     {
         public static void SendWebSocketText(this WebSocketStruct socketStruct, string text)
         {
-            if (socketStruct.WSRequest != null)
+            if (socketStruct.IsConnected)
             {
                 switch (socketStruct.Enum)
                 {
@@ -24,7 +24,7 @@
 
         public static void SendWebSocketByteArray(this WebSocketStruct socketStruct, byte[] bytes)
         {
-            if (socketStruct.WSRequest != null)
+            if (socketStruct.IsConnected)
             {
                 switch (socketStruct.Enum)
                 {
@@ -44,7 +44,7 @@
 
         public static void SendWebSocketClose(this WebSocketStruct socketStruct, int status, string text)
         {
-            if (socketStruct.WSRequest != null)
+            if (socketStruct.IsConnected)
             {
                 switch (socketStruct.Enum)
                 {
@@ -64,7 +64,7 @@
 
         public static void MulticastWebSocketText(this WebSocketStruct socketStruct, string text)
         {
-            if (socketStruct.WSRequest != null)
+            if (socketStruct.IsConnected)
             {
                 switch (socketStruct.Enum)
                 {
@@ -84,7 +84,7 @@
 
         public static void MulticastWebSocketBinary(this WebSocketStruct socketStruct, byte[] bytes)
         {
-            if (socketStruct.WSRequest != null)
+            if (socketStruct.IsConnected)
             {
                 switch (socketStruct.Enum)
                 {

@@ -31,7 +31,7 @@ namespace ConsoleApp
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, World!");
-            CertHelper.GetContextNoValidate( SslProtocols.Tls12, "mypfx.pfx", "asecurepassword");
+            //CertHelper.GetContextNoValidate( SslProtocols.Tls12, "mypfx.pfx", "asecurepassword");
             var server = new WS_Server("127.0.0.1",7777);
             server.HTTP_AttributeToMethods.Override(Assembly.GetEntryAssembly());
             server.ReceivedRequestError += ReceivedRequestError;
