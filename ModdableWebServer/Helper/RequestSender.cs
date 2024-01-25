@@ -1,11 +1,12 @@
-﻿using NetCoreServer;
+﻿using ModdableWebServer.Attributes;
+using NetCoreServer;
 using System.Reflection;
 
 namespace ModdableWebServer.Helper
 {
     public static class RequestSender
     {
-        public static bool SendRequestHTTP(this ServerStruct server, HttpRequest request, Dictionary<(string url, string method), MethodInfo> AttributeToMethods)
+        public static bool SendRequestHTTP(this ServerStruct server, HttpRequest request, Dictionary<HTTPAttribute, MethodInfo> AttributeToMethods)
         {
             Dictionary<string, string> Parameters = new();
             string url = request.Url;
@@ -21,6 +22,47 @@ namespace ModdableWebServer.Helper
                     Sent = (bool)item.Value.Invoke(server, new object[] { request, server })!;
                     DebugPrinter.Debug("[SendRequestHTTP] Invoked!");
                     break;
+                }
+
+            }
+            return Sent;
+        }
+
+        public static bool SendRequestHTTPHeader(this ServerStruct server, HttpRequest request, Dictionary<HTTPHeaderAttribute, MethodInfo> AttributeToMethods)
+        {
+            Dictionary<string, string> Parameters = new();
+            string url = request.Url;
+            url = Uri.UnescapeDataString(url);
+            bool Sent = false;
+            foreach (var item in AttributeToMethods)
+            {
+                if ((UrlHelper.Match(url, item.Key.url, out Parameters) || item.Key.url == url) && request.Method.ToUpper() == item.Key.method.ToUpper())
+                {
+                    DebugPrinter.Debug($"[SendRequestHTTPHeader] URL Matched! {url}");
+                    server.Headers = request.GetHeaders();
+                    server.Parameters = Parameters;
+
+                    //sorry for much if states, testing
+                    if (!string.IsNullOrEmpty(item.Key.headername) && server.Headers.ContainsKey(item.Key.headername.ToLower()))
+                    {
+                        DebugPrinter.Debug("[SendRequestHTTPHeader] Header contains the HeaderName! " + item.Key.headername);
+                        if (item.Key.headervalue != string.Empty)
+                        {
+                            if (server.Headers[item.Key.headername] == item.Key.headervalue)
+                            {
+                                Sent = (bool)item.Value.Invoke(server, new object[] { request, server })!;
+                                DebugPrinter.Debug("[SendRequestHTTPHeader] Invoked! (With Value)");
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            Sent = (bool)item.Value.Invoke(server, new object[] { request, server })!;
+                            DebugPrinter.Debug("[SendRequestHTTPHeader] Invoked! (Without Value)");
+                            break;
+                        }
+                    }
+                    //  Should we fallback or not? Maybe not for now
                 }
 
             }

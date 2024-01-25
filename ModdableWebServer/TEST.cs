@@ -54,6 +54,54 @@ namespace ModdableWebServer
             return true;
         }
 
+        [HTTPHeader("GET", "/testheader", "test")]
+        public static bool TEST_HEADER(HttpRequest request, ServerStruct serverStruct)
+        {
+            Console.WriteLine("Headers:");
+            foreach (var item in serverStruct.Headers)
+            {
+                Console.WriteLine(item.Key + " = " + item.Value);
+            }
+            Console.WriteLine("Parameters:");
+
+            foreach (var item in serverStruct.Parameters)
+            {
+                Console.WriteLine(item.Key + " = " + item.Value);
+            }
+
+            Console.WriteLine("TEST HEADER");
+            ResponseCreator response = new();
+            response.SetBody("test header");
+            serverStruct.Response = response.GetResponse();
+            ResponseSender.SendResponse(serverStruct);
+            return true;
+        }
+
+        // IF we would use the same url we would have been down, since the other one is triggered before this one.
+        [HTTPHeader("GET", "/testheader2", "test","myvalue")]
+        public static bool TEST_HEADER2(HttpRequest request, ServerStruct serverStruct)
+        {
+            Console.WriteLine("Headers:");
+            foreach (var item in serverStruct.Headers)
+            {
+                Console.WriteLine(item.Key + " = " + item.Value);
+            }
+            Console.WriteLine("Parameters:");
+
+            foreach (var item in serverStruct.Parameters)
+            {
+                Console.WriteLine(item.Key + " = " + item.Value);
+            }
+
+            Console.WriteLine("TEST HEADER 2");
+            ResponseCreator response = new();
+            response.SetBody("test header 2");
+            serverStruct.Response = response.GetResponse();
+            ResponseSender.SendResponse(serverStruct);
+            return true;
+        }
+
+
         [HTTP("GET", "/test2/{test}")]
         public static bool test2(HttpRequest request, ServerStruct serverStruct)
         {

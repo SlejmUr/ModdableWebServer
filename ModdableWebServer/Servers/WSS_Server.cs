@@ -16,15 +16,87 @@ namespace ModdableWebServer.Servers
         public event EventHandler<(string address, int port)>? Started = null;
         public event EventHandler? Stopped = null;
         #endregion
-        public Dictionary<(string url, string method), MethodInfo> HTTP_AttributeToMethods = new();
-        public Dictionary<string, MethodInfo> WS_AttributeToMethods = new();
+        internal Dictionary<HTTPHeaderAttribute, MethodInfo> HeaderAttributeToMethods = new();
+        internal Dictionary<HTTPAttribute, MethodInfo> HTTP_AttributeToMethods = new();
+        internal Dictionary<string, MethodInfo> WS_AttributeToMethods = new();
 
         public bool DoReturn404IfFail = true;
         public WSS_Server(SslContext context, string address, int port) : base(context, address, port)
         {
             HTTP_AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
             WS_AttributeToMethods = AttributeMethodHelper.UrlWSLoader(Assembly.GetAssembly(typeof(WSAttribute)));
+            HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
         }
+
+        #region Attribute Controls
+        public void OverrideAttribute(Assembly assembly)
+        {
+            HTTP_AttributeToMethods.Override(assembly);
+        }
+
+        public void MergeAttribute(Assembly assembly)
+        {
+            HTTP_AttributeToMethods.Merge(assembly);
+        }
+
+        public void ClearAttribute()
+        {
+            HTTP_AttributeToMethods.Clear();
+        }
+
+        public void OverrideWSAttribute(Assembly assembly)
+        {
+            WS_AttributeToMethods.Override(assembly);
+        }
+
+        public void MergeWSAttribute(Assembly assembly)
+        {
+            WS_AttributeToMethods.Merge(assembly);
+        }
+
+        public void ClearWSAttribute()
+        {
+            WS_AttributeToMethods.Clear();
+        }
+
+        public void OverrideHeaderAttribute(Assembly assembly)
+        {
+            HeaderAttributeToMethods.Override(assembly);
+        }
+
+        public void MergeHeaderAttribute(Assembly assembly)
+        {
+            HeaderAttributeToMethods.Merge(assembly);
+        }
+
+        public void ClearHeaderAttribute()
+        {
+            HeaderAttributeToMethods.Clear();
+        }
+
+        public void OverrideAttributes(Assembly assembly)
+        {
+            HeaderAttributeToMethods.Override(assembly);
+            WS_AttributeToMethods.Override(assembly);
+            HTTP_AttributeToMethods.Override(assembly);
+        }
+
+        public void MergeAttributes(Assembly assembly)
+        {
+            HeaderAttributeToMethods.Merge(assembly);
+            WS_AttributeToMethods.Merge(assembly);
+            HTTP_AttributeToMethods.Merge(assembly);
+        }
+
+        public void ClearAttributes()
+        {
+            HeaderAttributeToMethods.Clear();
+            WS_AttributeToMethods.Clear();
+            HTTP_AttributeToMethods.Clear();
+        }
+
+        #endregion
+
         #region Overrides
         protected override void OnStarted() => Started?.Invoke(this, (Address, Port));
 
@@ -61,12 +133,14 @@ namespace ModdableWebServer.Servers
                 }
 
                 bool IsSent = serverStruct.SendRequestHTTP(request, WSS_Server.HTTP_AttributeToMethods);
+                bool IsSent_header = serverStruct.SendRequestHTTPHeader(request, WSS_Server.HeaderAttributeToMethods);
+
                 DebugPrinter.Debug("[WssSession.OnReceivedRequest] Request sent!");
 
-                if (!IsSent)
+                if (!IsSent || !IsSent_header)
                     WSS_Server.ReceivedFailed?.Invoke(this, request);
 
-                if (WSS_Server.DoReturn404IfFail && !IsSent)
+                if (WSS_Server.DoReturn404IfFail && (!IsSent || !IsSent_header))
                     SendResponse(Response.MakeErrorResponse(404));
 
             }

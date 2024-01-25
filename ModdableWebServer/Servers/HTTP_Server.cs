@@ -15,14 +15,64 @@ namespace ModdableWebServer.Servers
         public event EventHandler<(string address, int port)>? Started;
         public event EventHandler? Stopped;
         #endregion
-        public Dictionary<(string url, string method), MethodInfo> AttributeToMethods = new();
+        internal Dictionary<HTTPAttribute, MethodInfo> AttributeToMethods = new();
+        internal Dictionary<HTTPHeaderAttribute, MethodInfo> HeaderAttributeToMethods = new();
 
         public bool DoReturn404IfFail = true;
         public HTTP_Server(string address, int port) : base(address, port)
         {
             AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
+            HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
+        }
+        #region Attribute Controls
+        public void OverrideAttribute(Assembly assembly)
+        {
+            AttributeToMethods.Override(assembly);
         }
 
+        public void MergeAttribute(Assembly assembly)
+        {
+            AttributeToMethods.Merge(assembly);
+        }
+
+        public void ClearAttribute()
+        {
+            AttributeToMethods.Clear();
+        }
+        public void OverrideHeaderAttribute(Assembly assembly)
+        {
+            HeaderAttributeToMethods.Override(assembly);
+        }
+
+        public void MergeHeaderAttribute(Assembly assembly)
+        {
+            HeaderAttributeToMethods.Merge(assembly);
+        }
+
+        public void ClearHeaderAttribute()
+        {
+            HeaderAttributeToMethods.Clear();
+        }
+
+        public void OverrideAttributes(Assembly assembly)
+        {
+            HeaderAttributeToMethods.Override(assembly);
+            AttributeToMethods.Override(assembly);
+        }
+
+        public void MergeAttributes(Assembly assembly)
+        {
+            HeaderAttributeToMethods.Merge(assembly);
+            AttributeToMethods.Merge(assembly);
+        }
+
+        public void ClearAttributes()
+        {
+            HeaderAttributeToMethods.Clear();
+            AttributeToMethods.Clear();
+        }
+
+        #endregion
         #region Overrides
         protected override void OnStarted() => Started?.Invoke(this, (Address, Port));
 
@@ -49,12 +99,14 @@ namespace ModdableWebServer.Servers
                 };
 
                 bool IsSent = serverStruct.SendRequestHTTP(request, HTTP_Server.AttributeToMethods);
+                bool IsSent_header = serverStruct.SendRequestHTTPHeader(request, HTTP_Server.HeaderAttributeToMethods);
+
                 DebugPrinter.Debug("[HttpSession.OnReceivedRequest] Request sent!");
 
-                if (!IsSent)
+                if (!IsSent || !IsSent_header)
                     HTTP_Server.ReceivedFailed?.Invoke(this, request);
 
-                if (HTTP_Server.DoReturn404IfFail && !IsSent)
+                if (HTTP_Server.DoReturn404IfFail && (!IsSent || !IsSent_header))
                     SendResponse(Response.MakeErrorResponse(404));
             }
 
