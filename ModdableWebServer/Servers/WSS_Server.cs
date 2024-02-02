@@ -16,9 +16,9 @@ namespace ModdableWebServer.Servers
         public event EventHandler<(string address, int port)>? Started = null;
         public event EventHandler? Stopped = null;
         #endregion
-        internal Dictionary<HTTPHeaderAttribute, MethodInfo> HeaderAttributeToMethods = new();
-        internal Dictionary<HTTPAttribute, MethodInfo> HTTP_AttributeToMethods = new();
-        internal Dictionary<string, MethodInfo> WS_AttributeToMethods = new();
+        public Dictionary<HTTPHeaderAttribute, MethodInfo> HeaderAttributeToMethods = new();
+        public Dictionary<HTTPAttribute, MethodInfo> HTTP_AttributeToMethods = new();
+        public Dictionary<string, MethodInfo> WS_AttributeToMethods = new();
 
         public bool DoReturn404IfFail = true;
         public WSS_Server(SslContext context, string address, int port) : base(context, address, port)
