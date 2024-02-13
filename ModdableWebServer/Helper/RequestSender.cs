@@ -11,6 +11,7 @@ namespace ModdableWebServer.Helper
             Dictionary<string, string> Parameters = new();
             string url = request.Url;
             url = Uri.UnescapeDataString(url);
+            DebugPrinter.Debug($"[SendRequestHTTP] Requesting with URL: {url}");
             bool Sent = false;
             foreach (var item in AttributeToMethods)
             {
@@ -33,6 +34,7 @@ namespace ModdableWebServer.Helper
             Dictionary<string, string> Parameters = new();
             string url = request.Url;
             url = Uri.UnescapeDataString(url);
+            DebugPrinter.Debug($"[SendRequestHTTPHeader] Requesting with URL: {url}");
             bool Sent = false;
             foreach (var item in AttributeToMethods)
             {

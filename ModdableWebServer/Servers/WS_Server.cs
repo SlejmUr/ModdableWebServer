@@ -137,10 +137,10 @@ namespace ModdableWebServer.Servers
 
                 DebugPrinter.Debug("[WsSession.OnReceivedRequest] Request sent!");
 
-                if (!IsSent || !IsSent_header)
+                if (!IsSent && !IsSent_header)
                     WS_Server.ReceivedFailed?.Invoke(this, request);
 
-                if (WS_Server.DoReturn404IfFail && (!IsSent || !IsSent_header))
+                if (WS_Server.DoReturn404IfFail && (!IsSent && !IsSent_header))
                     SendResponse(Response.MakeErrorResponse(404));
 
             }

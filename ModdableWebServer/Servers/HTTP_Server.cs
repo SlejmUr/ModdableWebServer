@@ -103,10 +103,10 @@ namespace ModdableWebServer.Servers
 
                 DebugPrinter.Debug("[HttpSession.OnReceivedRequest] Request sent!");
 
-                if (!IsSent || !IsSent_header)
+                if (!IsSent && !IsSent_header)
                     HTTP_Server.ReceivedFailed?.Invoke(this, request);
 
-                if (HTTP_Server.DoReturn404IfFail && (!IsSent || !IsSent_header))
+                if (HTTP_Server.DoReturn404IfFail && (!IsSent && !IsSent_header))
                     SendResponse(Response.MakeErrorResponse(404));
             }
 

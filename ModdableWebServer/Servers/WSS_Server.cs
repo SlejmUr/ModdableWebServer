@@ -135,12 +135,12 @@ namespace ModdableWebServer.Servers
                 bool IsSent = serverStruct.SendRequestHTTP(request, WSS_Server.HTTP_AttributeToMethods);
                 bool IsSent_header = serverStruct.SendRequestHTTPHeader(request, WSS_Server.HeaderAttributeToMethods);
 
-                DebugPrinter.Debug("[WssSession.OnReceivedRequest] Request sent!");
+                DebugPrinter.Debug($"[WssSession.OnReceivedRequest] Request sent! Normal? {IsSent} Header? {IsSent_header} ");
 
-                if (!IsSent || !IsSent_header)
+                if (!IsSent && !IsSent_header)
                     WSS_Server.ReceivedFailed?.Invoke(this, request);
 
-                if (WSS_Server.DoReturn404IfFail && (!IsSent || !IsSent_header))
+                if (WSS_Server.DoReturn404IfFail && (!IsSent && !IsSent_header))
                     SendResponse(Response.MakeErrorResponse(404));
 
             }
