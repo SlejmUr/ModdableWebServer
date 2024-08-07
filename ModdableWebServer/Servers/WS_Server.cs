@@ -1,6 +1,7 @@
 ﻿using ModdableWebServer.Attributes;
 using ModdableWebServer.Helper;
 using NetCoreServer;
+using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 
@@ -22,6 +23,27 @@ namespace ModdableWebServer.Servers
 
         public bool DoReturn404IfFail = true;
         public WS_Server(string address, int port) : base(address, port)
+        {
+            HTTP_AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
+            WS_AttributeToMethods = AttributeMethodHelper.UrlWSLoader(Assembly.GetAssembly(typeof(WSAttribute)));
+            HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
+        }
+
+        public WS_Server(IPAddress address, int port) : base(address, port)
+        {
+            HTTP_AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
+            WS_AttributeToMethods = AttributeMethodHelper.UrlWSLoader(Assembly.GetAssembly(typeof(WSAttribute)));
+            HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
+        }
+
+        public WS_Server(DnsEndPoint endPoint) : base(endPoint)
+        {
+            HTTP_AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
+            WS_AttributeToMethods = AttributeMethodHelper.UrlWSLoader(Assembly.GetAssembly(typeof(WSAttribute)));
+            HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
+        }
+
+        public WS_Server(IPEndPoint endPoint) : base(endPoint)
         {
             HTTP_AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
             WS_AttributeToMethods = AttributeMethodHelper.UrlWSLoader(Assembly.GetAssembly(typeof(WSAttribute)));

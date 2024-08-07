@@ -31,7 +31,7 @@ namespace ConsoleApp
         static void Main(string[] args)
         {
             DebugPrinter.EnableLogs = true;
-            //DebugPrinter.PrintToConsole = true;
+            DebugPrinter.PrintToConsole = true;
             Console.WriteLine("Hello, World!");
             //CertHelper.GetContextNoValidate( SslProtocols.Tls12, "mypfx.pfx", "asecurepassword");
             var server = new WS_Server("127.0.0.1",7777);

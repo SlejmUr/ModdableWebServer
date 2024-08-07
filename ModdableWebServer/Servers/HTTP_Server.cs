@@ -1,6 +1,7 @@
 ﻿using ModdableWebServer.Attributes;
 using ModdableWebServer.Helper;
 using NetCoreServer;
+using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 
@@ -24,6 +25,25 @@ namespace ModdableWebServer.Servers
             AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
             HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
         }
+
+        public HTTP_Server(IPAddress address, int port) : base(address, port)
+        {
+            AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
+            HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
+        }
+
+        public HTTP_Server(DnsEndPoint endpoint) : base(endpoint)
+        {
+            AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
+            HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
+        }
+
+        public HTTP_Server(IPEndPoint endPoint) : base(endPoint)
+        {
+            AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
+            HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
+        }
+
         #region Attribute Controls
         public void OverrideAttribute(Assembly assembly)
         {

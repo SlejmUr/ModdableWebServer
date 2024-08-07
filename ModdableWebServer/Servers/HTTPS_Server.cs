@@ -26,6 +26,24 @@ namespace ModdableWebServer.Servers
             HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
         }
 
+        public HTTPS_Server(SslContext context, string address, int port) : base(context, address, port)
+        {
+            AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
+            HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
+        }
+
+        public HTTPS_Server(SslContext context, DnsEndPoint endpoint) : base(context, endpoint)
+        {
+            AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
+            HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
+        }
+
+        public HTTPS_Server(SslContext context, IPEndPoint ipEndPoint) : base(context, ipEndPoint)
+        {
+            AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
+            HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
+        }
+
         #region Attribute Controls
         public void OverrideAttribute(Assembly assembly)
         {

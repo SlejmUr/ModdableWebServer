@@ -129,6 +129,89 @@ namespace ModdableWebServer
             return true;
         }
 
+
+        [HTTP("GET", "/test3/{test}/test?aa=yes&asd={xx}")]
+        public static bool test3(HttpRequest request, ServerStruct serverStruct)
+        {
+            Console.WriteLine("Headers:");
+            foreach (var item in serverStruct.Headers)
+            {
+                Console.WriteLine(item.Key + " = " + item.Value);
+            }
+            Console.WriteLine("Parameters:");
+
+            foreach (var item in serverStruct.Parameters)
+            {
+                Console.WriteLine(item.Key + " = " + item.Value);
+            }
+
+            Console.WriteLine("test2");
+            ResponseCreator response = new();
+            response.SetHeaders(new Dictionary<string, string>()
+            {
+                { "key", "Value" }
+            });
+            response.SetBody("this is a proper test, and making things");
+            serverStruct.Response = response.GetResponse();
+            ResponseSender.SendResponse(serverStruct);
+            return true;
+        }
+
+        [HTTP("GET", "/test3/{test}/test2?{args}")]
+        public static bool test3args(HttpRequest request, ServerStruct serverStruct)
+        {
+            Console.WriteLine("Headers:");
+            foreach (var item in serverStruct.Headers)
+            {
+                Console.WriteLine(item.Key + " = " + item.Value);
+            }
+            Console.WriteLine("Parameters:");
+
+            foreach (var item in serverStruct.Parameters)
+            {
+                Console.WriteLine(item.Key + " = " + item.Value);
+            }
+
+            Console.WriteLine("test2");
+            ResponseCreator response = new();
+            response.SetHeaders(new Dictionary<string, string>()
+            {
+                { "key", "Value" }
+            });
+            response.SetBody("this is a proper test, and making things");
+            serverStruct.Response = response.GetResponse();
+            ResponseSender.SendResponse(serverStruct);
+            return true;
+        }
+
+
+        [HTTP("GET", "/test3/{test}?{args}")]
+        public static bool test3fullargs(HttpRequest request, ServerStruct serverStruct)
+        {
+            Console.WriteLine("Headers:");
+            foreach (var item in serverStruct.Headers)
+            {
+                Console.WriteLine(item.Key + " = " + item.Value);
+            }
+            Console.WriteLine("Parameters:");
+
+            foreach (var item in serverStruct.Parameters)
+            {
+                Console.WriteLine(item.Key + " = " + item.Value);
+            }
+
+            Console.WriteLine("test2");
+            ResponseCreator response = new();
+            response.SetHeaders(new Dictionary<string, string>()
+            {
+                { "key", "Value" }
+            });
+            response.SetBody("this is a proper test, and making things");
+            serverStruct.Response = response.GetResponse();
+            ResponseSender.SendResponse(serverStruct);
+            return true;
+        }
+
     }
 
 }

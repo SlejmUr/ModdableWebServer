@@ -12,6 +12,38 @@
             vals = new Dictionary<string, string>();
             string[] urlParts = SplitUrl(url);
             string[] patternParts = SplitUrl(pattern);
+            DebugPrinter.Debug("URL Parts: " + string.Join(" ", urlParts));
+            DebugPrinter.Debug("Pattern Paths: " + string.Join(" ", patternParts));
+            if (patternParts.Length >= 2 && pattern.Contains("?") && pattern.Split("?")[1] == "{args}")
+            {
+                for (int i = 0; i < urlParts.Length; i++)
+                {
+                    if ((patternParts.Length - 1) <= i)
+                    {
+                        var url_part = urlParts[i].Split('=');
+                        vals.Add(url_part[0], url_part[1]);
+                        continue;
+                    }
+                    string paramName = ExtractParameter(patternParts[i]);
+
+                    if (string.IsNullOrEmpty(paramName))
+                    {
+                        // no pattern
+                        if (!urlParts[i].Equals(patternParts[i]))
+                        {
+                            vals = new();
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        vals.Add(
+                            paramName.Replace("{", "").Replace("}", ""),
+                            urlParts[i].Split('=').Last());
+                    }
+                }
+                return true;
+            }
 
             if (urlParts.Length != patternParts.Length) return false;
 
@@ -60,7 +92,7 @@
 
         private static string[] SplitUrl(string url)
         {
-            string[] urlPaths = url.Split('/', StringSplitOptions.RemoveEmptyEntries); ;
+            string[] urlPaths = url.Split('/', StringSplitOptions.RemoveEmptyEntries);
             urlPaths = SplitUrl(urlPaths, '?');
             urlPaths = SplitUrl(urlPaths, '&');
 

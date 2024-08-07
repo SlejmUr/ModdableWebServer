@@ -53,7 +53,8 @@ If you ever will need, you can use `response.SetResponse`, but not suggesting it
 In Method can be used any HTTP/S Method.\
 GET, POST, HEAD, OPTION, DELETE is accepted.
 
-In the Url you can use the full url, or making it as parameter
+In the Url you can use the full url, or making it as parameter\
+If you use parameter you can use `?{args}` to parse every arg into the parameters
 
 ```csharp
 //url
@@ -61,6 +62,12 @@ In the Url you can use the full url, or making it as parameter
 
 //parameter
 [HTTP("GET", "/hey/{parameters}")]
+
+//parameter and normal args
+[HTTP("GET", "/hey/{parameters}?user={username}")]
+
+//parameter and args
+[HTTP("GET", "/hey/{parameters}?{args}")]
 ```
 
 Make sure your Function is PUBLIC, STATIC, and must return a BOOL.
