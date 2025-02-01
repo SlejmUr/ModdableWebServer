@@ -42,7 +42,8 @@ namespace ConsoleApp
             server.OnSocketError += OnSocketError;
             server.Started += HTTP_Server_OnStarted;
             server.Stopped += HTTP_Server_OnStopped;
-            server.AddStaticContent("static");
+            // In net8 this is a must be!
+            server.AddStaticContent("static", string.Empty);
             server.Start();
             Console.ReadLine();
             server.Stop();
