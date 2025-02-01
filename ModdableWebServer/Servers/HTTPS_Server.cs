@@ -111,6 +111,14 @@ namespace ModdableWebServer.Servers
             #region Overrides
             protected override void OnReceivedRequest(HttpRequest request)
             {
+                if (request.Method == "GET" && !request.Url.Contains("?") && this.Cache.FindPath(request.Url))
+                {
+                    var cache = this.Cache.Find(request.Url);
+                    // Check again to make sure.
+                    if (cache.Item1)
+                        this.SendAsync(cache.Item2);
+                }
+
                 ServerStruct serverStruct = new ServerStruct()
                 {
                     HTTPS_Session = this,

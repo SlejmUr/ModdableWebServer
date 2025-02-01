@@ -8,6 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="static\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="static\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ModdableWebServer\ModdableWebServer.csproj" />
   </ItemGroup>
 

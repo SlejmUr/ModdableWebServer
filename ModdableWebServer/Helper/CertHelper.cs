@@ -3,33 +3,49 @@ using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
-namespace ModdableWebServer.Helper
+namespace ModdableWebServer.Helper;
+
+public class CertHelper
 {
-    public class CertHelper
+    public static X509Certificate GetCert(string pfxPath, string password)
     {
-        public static X509Certificate GetCert(string pfxPath, string password)
-        {
-            if (pfxPath == null)
-                throw new ArgumentNullException(nameof(pfxPath));
+        if (string.IsNullOrEmpty(pfxPath))
+            throw new ArgumentNullException(nameof(pfxPath));
 
-            if (!File.Exists(pfxPath))
-                throw new FileNotFoundException($"{pfxPath} File not found");
+        if (!File.Exists(pfxPath))
+            throw new FileNotFoundException($"{pfxPath} File not found");
 
-            return new X509Certificate2(File.ReadAllBytes(pfxPath), password);
-        }
+        return new X509Certificate2(File.ReadAllBytes(pfxPath), password);
+    }
 
-        public static SslContext GetContext(SslProtocols sslprotocol, string pfxPath, string password)
-        {
-            return new SslContext(sslprotocol, GetCert(pfxPath, password));
-        }
-        public static SslContext GetContextNoValidate(SslProtocols sslprotocol, string pfxPath, string password)
-        {
-            return new SslContext(sslprotocol, GetCert(pfxPath, password), new RemoteCertificateValidationCallback(NoCertificateValidator));
-        }
+    public static X509Certificate GetCertWithPath(string certPath, string keyPath)
+    {
+        if (string.IsNullOrEmpty(certPath))
+            throw new ArgumentNullException(nameof(certPath));
 
-        public static bool NoCertificateValidator(object? sender, X509Certificate? certificate, X509Chain? chain, SslPolicyErrors sslPolicyErrors)
-        {
-            return true;
-        }
+        if (string.IsNullOrEmpty(keyPath))
+            throw new ArgumentNullException(nameof(keyPath));
+
+        if (!File.Exists(certPath))
+            throw new FileNotFoundException($"{certPath} File not found");
+
+        if (!File.Exists(keyPath))
+            throw new FileNotFoundException($"{keyPath} File not found");
+
+        return X509Certificate2.CreateFromPemFile(certPath, keyPath);
+    }
+
+    public static SslContext GetContext(SslProtocols sslprotocol, string pfxPath, string password)
+    {
+        return new SslContext(sslprotocol, GetCert(pfxPath, password));
+    }
+    public static SslContext GetContextNoValidate(SslProtocols sslprotocol, string pfxPath, string password)
+    {
+        return new SslContext(sslprotocol, GetCert(pfxPath, password), new RemoteCertificateValidationCallback(NoCertificateValidator));
+    }
+
+    public static bool NoCertificateValidator(object? sender, X509Certificate? certificate, X509Chain? chain, SslPolicyErrors sslPolicyErrors)
+    {
+        return true;
     }
 }

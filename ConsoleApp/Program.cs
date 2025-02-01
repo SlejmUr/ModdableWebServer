@@ -34,14 +34,15 @@ namespace ConsoleApp
             DebugPrinter.PrintToConsole = true;
             Console.WriteLine("Hello, World!");
             //CertHelper.GetContextNoValidate( SslProtocols.Tls12, "mypfx.pfx", "asecurepassword");
-            var server = new WS_Server("127.0.0.1",7777);
+            var server = new WS_Server("127.0.0.1", 7777);
             //this override all attributes
-            server.OverrideAttributes(Assembly.GetEntryAssembly());
+            server.OverrideAttributes(Assembly.GetEntryAssembly()!);
             server.ReceivedRequestError += ReceivedRequestError;
             server.WSError += WSError;
             server.OnSocketError += OnSocketError;
             server.Started += HTTP_Server_OnStarted;
             server.Stopped += HTTP_Server_OnStopped;
+            server.AddStaticContent("static");
             server.Start();
             Console.ReadLine();
             server.Stop();

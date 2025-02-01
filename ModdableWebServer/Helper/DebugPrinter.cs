@@ -1,28 +1,27 @@
 ﻿using LLibrary;
 
-namespace ModdableWebServer.Helper
+namespace ModdableWebServer.Helper;
+
+public class DebugPrinter
 {
-    public class DebugPrinter
+    public static bool PrintToConsole = false;
+    public static bool EnableLogs = false;
+    public static L logger = new(true, directory: "mws_logs");
+
+    public static void Debug(string ToPrint, string prefix = "DEBUG")
     {
-        public static bool PrintToConsole = false;
-        public static bool EnableLogs = false;
-        public static L logger = new(true, directory: "mws_logs");
+        Print(ToPrint, prefix);
+    }
 
-        public static void Debug(string ToPrint, string prefix = "DEBUG")
+    static void Print(string ToPrint, string prefix)
+    {
+        if (PrintToConsole)
         {
-            Print(ToPrint, prefix);
+            Console.WriteLine($"[{prefix}] {ToPrint}");
         }
-
-        static void Print(string ToPrint, string prefix)
+        if (EnableLogs)
         {
-            if (PrintToConsole)
-            {
-                Console.WriteLine($"[{prefix}] {ToPrint}");
-            }
-            if (EnableLogs)
-            {
-                logger.Log(prefix, ToPrint == null ? "NULL" : ToPrint);
-            }
+            logger.Log(prefix, ToPrint == null ? "NULL" : ToPrint);
         }
     }
 }
