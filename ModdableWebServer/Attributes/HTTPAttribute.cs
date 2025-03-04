@@ -1,13 +1,8 @@
 ﻿namespace ModdableWebServer.Attributes;
 
-public class HTTPAttribute : Attribute
+[AttributeUsage(AttributeTargets.Method)]
+public class HTTPAttribute(string method, string url) : Attribute
 {
-    public string method;
-    public string url;
-
-    public HTTPAttribute(string method, string url)
-    {
-        this.method = method;
-        this.url = url;
-    }
+    public string method = method;
+    public string url = url;
 }

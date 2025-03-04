@@ -16,8 +16,8 @@ namespace ModdableWebServer.Servers
         public event EventHandler<(string address, int port)>? Started = null;
         public event EventHandler? Stopped = null;
         #endregion
-        public Dictionary<HTTPAttribute, MethodInfo> AttributeToMethods = new();
-        public Dictionary<HTTPHeaderAttribute, MethodInfo> HeaderAttributeToMethods = new();
+        public Dictionary<HTTPAttribute, MethodInfo> AttributeToMethods = [];
+        public Dictionary<HTTPHeaderAttribute, MethodInfo> HeaderAttributeToMethods = [];
 
         public bool DoReturn404IfFail = true;
         public HTTPS_Server(SslContext context, IPAddress address, int port) : base(context, address, port)
@@ -103,15 +103,14 @@ namespace ModdableWebServer.Servers
         protected override void OnError(SocketError error) => OnSocketError?.Invoke(this, error);
         #endregion
 
-        public class Session : HttpsSession
+        public class Session(HttpsServer server) : HttpsSession(server)
         {
             public HTTPS_Server HTTPS_Server => (HTTPS_Server)this.Server;
-            public Session(HttpsServer server) : base(server) { }
 
             #region Overrides
             protected override void OnReceivedRequest(HttpRequest request)
             {
-                if (request.Method == "GET" && !request.Url.Contains("?") && this.Cache.FindPath(request.Url))
+                if (request.Method == "GET" && !request.Url.Contains('?') && this.Cache.FindPath(request.Url))
                 {
                     var cache = this.Cache.Find(request.Url);
                     // Check again to make sure.
@@ -119,7 +118,7 @@ namespace ModdableWebServer.Servers
                         this.SendAsync(cache.Item2);
                 }
 
-                ServerStruct serverStruct = new ServerStruct()
+                ServerStruct serverStruct = new()
                 {
                     HTTPS_Session = this,
                     Response = this.Response,

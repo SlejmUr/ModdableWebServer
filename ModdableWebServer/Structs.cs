@@ -1,14 +1,13 @@
-﻿using ModdableWebServer.Servers;
-using NetCoreServer;
+﻿using NetCoreServer;
 
 namespace ModdableWebServer;
 
 public struct ServerStruct
 {
-    public HTTP_Server.Session? HTTP_Session;
-    public HTTPS_Server.Session? HTTPS_Session;
-    public WS_Server.Session? WS_Session;
-    public WSS_Server.Session? WSS_Session;
+    public TcpSession? HTTP_Session;
+    public SslSession? HTTPS_Session;
+    public TcpSession? WS_Session;
+    public SslSession? WSS_Session;
     public HttpResponse Response;
     public Dictionary<string, string> Headers;
     public Dictionary<string, string> Parameters;
@@ -22,8 +21,8 @@ public struct WebSocketStruct
     public bool IsClosed;
     public Req Request;
     public (byte[] buffer, long offset, long size)? WSRequest;
-    public WS_Server.Session? WS_Session;
-    public WSS_Server.Session? WSS_Session;
+    public TcpSession? WS_Session;
+    public SslSession? WSS_Session;
     public WSEnum Enum;
 }
 

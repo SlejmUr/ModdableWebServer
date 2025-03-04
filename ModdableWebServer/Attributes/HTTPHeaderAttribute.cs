@@ -1,5 +1,6 @@
 ﻿namespace ModdableWebServer.Attributes;
 
+[AttributeUsage(AttributeTargets.Method)]
 public class HTTPHeaderAttribute : Attribute
 {
     public string method;

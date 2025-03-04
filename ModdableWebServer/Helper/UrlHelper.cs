@@ -5,16 +5,17 @@ public class UrlHelper
     #region Parameter url stuff
     public static bool Match(string url, string pattern, out Dictionary<string, string> vals)
     {
-        vals = new();
+        vals = [];
         if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
         if (string.IsNullOrEmpty(pattern)) throw new ArgumentNullException(nameof(pattern));
 
-        vals = new Dictionary<string, string>();
         string[] urlParts = SplitUrl(url);
         string[] patternParts = SplitUrl(pattern);
         DebugPrinter.Debug("URL Parts: " + string.Join(" ", urlParts));
         DebugPrinter.Debug("Pattern Paths: " + string.Join(" ", patternParts));
-        if (patternParts.Length >= 2 && pattern.Contains("?") && pattern.Split("?")[1] == "{args}")
+        if (patternParts.Length >= 2 && 
+            pattern.Contains('?') && 
+            pattern.Split("?")[1] == "{args}")
         {
             for (int i = 0; i < urlParts.Length; i++)
             {
@@ -31,7 +32,7 @@ public class UrlHelper
                     // no pattern
                     if (!urlParts[i].Equals(patternParts[i]))
                     {
-                        vals = new();
+                        vals = [];
                         return false;
                     }
                 }
@@ -56,7 +57,7 @@ public class UrlHelper
                 // no pattern
                 if (!urlParts[i].Equals(patternParts[i]))
                 {
-                    vals = new();
+                    vals = [];
                     return false;
                 }
             }
@@ -74,10 +75,10 @@ public class UrlHelper
     {
         if (string.IsNullOrEmpty(pattern)) throw new ArgumentNullException(nameof(pattern));
 
-        if (!pattern.Contains("{"))
+        if (!pattern.Contains('{'))
             return string.Empty;
 
-        if (pattern.Contains("}"))
+        if (pattern.Contains('}'))
             return string.Empty;
 
         int indexStart = pattern.IndexOf('{');
@@ -99,7 +100,7 @@ public class UrlHelper
 
     private static string[] SplitUrl(string[] urlParts, char splitChar)
     {
-        List<string> parts = new List<string>();
+        List<string> parts = [];
 
         foreach (var part in urlParts)
         {
@@ -113,7 +114,7 @@ public class UrlHelper
             parts.AddRange(subParts);
         }
 
-        return parts.ToArray();
+        return [.. parts];
     }
 
     #endregion

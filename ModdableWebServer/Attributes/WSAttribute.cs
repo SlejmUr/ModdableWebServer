@@ -1,11 +1,7 @@
 ﻿namespace ModdableWebServer.Attributes;
 
-public class WSAttribute : Attribute
+[AttributeUsage(AttributeTargets.Method)]
+public class WSAttribute(string url) : Attribute
 {
-    public string url;
-
-    public WSAttribute(string url)
-    {
-        this.url = url;
-    }
+    public string url = url;
 }

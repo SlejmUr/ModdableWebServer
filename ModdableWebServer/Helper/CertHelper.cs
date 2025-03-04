@@ -32,7 +32,7 @@ public class CertHelper
         if (!File.Exists(keyPath))
             throw new FileNotFoundException($"{keyPath} File not found");
 
-        return X509Certificate2.CreateFromPemFile(certPath, keyPath);
+        return new X509Certificate2(X509Certificate2.CreateFromPemFile(certPath, keyPath).Export(X509ContentType.Pfx));
     }
 
     public static SslContext GetContext(SslProtocols sslprotocol, string pfxPath, string password)

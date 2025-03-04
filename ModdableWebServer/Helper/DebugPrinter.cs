@@ -10,18 +10,13 @@ public class DebugPrinter
 
     public static void Debug(string ToPrint, string prefix = "DEBUG")
     {
-        Print(ToPrint, prefix);
-    }
-
-    static void Print(string ToPrint, string prefix)
-    {
         if (PrintToConsole)
         {
             Console.WriteLine($"[{prefix}] {ToPrint}");
         }
         if (EnableLogs)
         {
-            logger.Log(prefix, ToPrint == null ? "NULL" : ToPrint);
+            logger.Log(prefix, ToPrint ?? "NULL");
         }
     }
 }
