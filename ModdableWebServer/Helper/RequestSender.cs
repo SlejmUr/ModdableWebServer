@@ -13,8 +13,8 @@ public static class RequestSender
         bool Sent = false;
         foreach (var item in AttributeToMethods)
         {
-            if ((UrlHelper.Match(url, item.Key.url, out Dictionary<string, string> Parameters) || item.Key.url == url) && 
-                request.Method.Equals(item.Key.method, StringComparison.CurrentCultureIgnoreCase))
+            if ((UrlHelper.Match(url, item.Key.url, out Dictionary<string, string> Parameters) || item.Key.url == url) &&
+                request.Method.ToLower() == item.Key.method.ToLower())
             {
                 DebugPrinter.Debug($"[SendRequestHTTP] URL Matched! {url}");
                 server.Headers = request.GetHeaders();

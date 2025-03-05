@@ -6,13 +6,18 @@ public class UrlHelper
     public static bool Match(string url, string pattern, out Dictionary<string, string> vals)
     {
         vals = [];
-        if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
-        if (string.IsNullOrEmpty(pattern)) throw new ArgumentNullException(nameof(pattern));
+        ArgumentNullException.ThrowIfNull(url);
+        ArgumentNullException.ThrowIfNull(pattern);
 
         string[] urlParts = SplitUrl(url);
         string[] patternParts = SplitUrl(pattern);
+
+        if (urlParts.Length != patternParts.Length)
+            return false;
+
         DebugPrinter.Debug("URL Parts: " + string.Join(" ", urlParts));
         DebugPrinter.Debug("Pattern Paths: " + string.Join(" ", patternParts));
+
         if (patternParts.Length >= 2 && 
             pattern.Contains('?') && 
             pattern.Split("?")[1] == "{args}")
@@ -46,12 +51,9 @@ public class UrlHelper
             return true;
         }
 
-        if (urlParts.Length != patternParts.Length) return false;
-
         for (int i = 0; i < urlParts.Length; i++)
         {
             string paramName = ExtractParameter(patternParts[i]);
-
             if (string.IsNullOrEmpty(paramName))
             {
                 // no pattern
@@ -73,16 +75,16 @@ public class UrlHelper
 
     private static string ExtractParameter(string pattern)
     {
-        if (string.IsNullOrEmpty(pattern)) throw new ArgumentNullException(nameof(pattern));
+        ArgumentNullException.ThrowIfNull(pattern);
 
         if (!pattern.Contains('{'))
             return string.Empty;
 
-        if (pattern.Contains('}'))
+        if (!pattern.Contains('}'))
             return string.Empty;
 
-        int indexStart = pattern.IndexOf('{');
-        int indexEnd = pattern.LastIndexOf('}');
+        int indexStart = pattern.IndexOf("{");
+        int indexEnd = pattern.LastIndexOf("}");
         if (indexEnd - 1 > indexStart)
         {
             return pattern.Substring(indexStart, indexEnd - indexStart + 1);
