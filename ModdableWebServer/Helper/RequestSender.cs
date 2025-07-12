@@ -14,7 +14,7 @@ public static class RequestSender
         foreach (var item in AttributeToMethods)
         {
             if ((UrlHelper.Match(url, item.Key.url, out Dictionary<string, string> Parameters) || item.Key.url == url) &&
-                request.Method.ToLower() == item.Key.method.ToLower())
+                request.Method.Equals(item.Key.method, StringComparison.CurrentCultureIgnoreCase))
             {
                 DebugPrinter.Debug($"[SendRequestHTTP] URL Matched! {url}");
                 server.Headers = request.GetHeaders();

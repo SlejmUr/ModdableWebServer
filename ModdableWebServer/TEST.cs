@@ -34,6 +34,8 @@ public class TEST
 
 
     [HTTP("GET", "/test")]
+    [HTTP("GET", "/test1")]
+    [HTTP("GET", "/test11")]
     public static bool TEST1(HttpRequest _, ServerStruct serverStruct)
     {
         Console.WriteLine("Headers:");
@@ -54,6 +56,31 @@ public class TEST
         return true;
     }
 
+
+    [HTTP("DELETE", "/del")]
+    public static bool DEL(HttpRequest _, ServerStruct serverStruct)
+    {
+        Console.WriteLine("Headers:");
+        foreach (var item in serverStruct.Headers)
+        {
+            Console.WriteLine(item.Key + " = " + item.Value);
+        }
+        Console.WriteLine("Parameters:");
+
+        foreach (var item in serverStruct.Parameters)
+        {
+            Console.WriteLine(item.Key + " = " + item.Value);
+        }
+
+        Console.WriteLine("TEST");
+        ResponseCreator response = new(200);
+        response.SetBody("balls");
+        serverStruct.Response = response.GetResponse();
+        serverStruct.SendResponse();
+        return true;
+    }
+
+    [HTTPHeader("GET", "/testheader2", "test")]
     [HTTPHeader("GET", "/testheader", "test")]
     public static bool TEST_HEADER(HttpRequest _, ServerStruct serverStruct)
     {

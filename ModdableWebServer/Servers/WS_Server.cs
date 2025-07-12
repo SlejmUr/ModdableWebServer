@@ -23,34 +23,25 @@ namespace ModdableWebServer.Servers
 
         public bool DoReturn404IfFail = true;
         public WS_Server(string address, int port) : base(address, port)
-        {
-            HTTP_AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
-            WS_AttributeToMethods = AttributeMethodHelper.UrlWSLoader(Assembly.GetAssembly(typeof(WSAttribute)));
-            HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
-        }
+            => Load();
 
         public WS_Server(IPAddress address, int port) : base(address, port)
-        {
-            HTTP_AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
-            WS_AttributeToMethods = AttributeMethodHelper.UrlWSLoader(Assembly.GetAssembly(typeof(WSAttribute)));
-            HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
-        }
+            => Load();
 
         public WS_Server(DnsEndPoint endPoint) : base(endPoint)
-        {
-            HTTP_AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
-            WS_AttributeToMethods = AttributeMethodHelper.UrlWSLoader(Assembly.GetAssembly(typeof(WSAttribute)));
-            HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
-        }
+            => Load();
 
         public WS_Server(IPEndPoint endPoint) : base(endPoint)
-        {
-            HTTP_AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
-            WS_AttributeToMethods = AttributeMethodHelper.UrlWSLoader(Assembly.GetAssembly(typeof(WSAttribute)));
-            HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
-        }
+            => Load();
 
         #region Attribute Controls
+        private void Load()
+        {
+            Assembly? asm = Assembly.GetAssembly(typeof(HTTPAttribute));
+            HTTP_AttributeToMethods = AttributeMethodHelper.GetMethodAndAttribute<HTTPAttribute>(asm);
+            WS_AttributeToMethods = AttributeMethodHelper.GetMethodAndAttribute<WSAttribute>(asm).ToDictionary(x=>x.Key.url , x=>x.Value);
+            HeaderAttributeToMethods = AttributeMethodHelper.GetMethodAndAttribute<HTTPHeaderAttribute>(asm);
+        }
         public void OverrideAttribute(Assembly assembly)
         {
             HTTP_AttributeToMethods.Override(assembly);

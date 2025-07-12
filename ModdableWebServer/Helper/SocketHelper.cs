@@ -15,4 +15,16 @@ public static class SocketHelper
             _ => throw new NotImplementedException("[GetSocket] ServerEnum type not exist!")
         };
     }
+
+    public static Guid GetId(this ServerStruct serverStruct)
+    {
+        return serverStruct.Enum switch
+        {
+            ServerEnum.HTTP => serverStruct.HTTP_Session!.Id,
+            ServerEnum.HTTPS => serverStruct.HTTPS_Session!.Id,
+            ServerEnum.WS => serverStruct.WS_Session!.Id,
+            ServerEnum.WSS => serverStruct.WSS_Session!.Id,
+            _ => throw new NotImplementedException("[GetId] ServerEnum type not exist!")
+        };
+    }
 }

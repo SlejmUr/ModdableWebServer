@@ -23,34 +23,25 @@ namespace ModdableWebServer.Servers
 
         public bool DoReturn404IfFail = true;
         public WSS_Server(SslContext context, string address, int port) : base(context, address, port)
-        {
-            HTTP_AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
-            WS_AttributeToMethods = AttributeMethodHelper.UrlWSLoader(Assembly.GetAssembly(typeof(WSAttribute)));
-            HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
-        }
+            => Load();
 
         public WSS_Server(SslContext context, IPAddress address, int port) : base(context, address, port)
-        {
-            HTTP_AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
-            WS_AttributeToMethods = AttributeMethodHelper.UrlWSLoader(Assembly.GetAssembly(typeof(WSAttribute)));
-            HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
-        }
+            => Load();
 
         public WSS_Server(SslContext context, DnsEndPoint endPoint) : base(context, endPoint)
-        {
-            HTTP_AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
-            WS_AttributeToMethods = AttributeMethodHelper.UrlWSLoader(Assembly.GetAssembly(typeof(WSAttribute)));
-            HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
-        }
+            => Load();
 
         public WSS_Server(SslContext context, IPEndPoint endPoint) : base(context, endPoint)
-        {
-            HTTP_AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
-            WS_AttributeToMethods = AttributeMethodHelper.UrlWSLoader(Assembly.GetAssembly(typeof(WSAttribute)));
-            HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
-        }
+            => Load();
 
         #region Attribute Controls
+        private void Load()
+        {
+            Assembly? asm = Assembly.GetAssembly(typeof(HTTPAttribute));
+            HTTP_AttributeToMethods = AttributeMethodHelper.GetMethodAndAttribute<HTTPAttribute>(asm);
+            WS_AttributeToMethods = AttributeMethodHelper.GetMethodAndAttribute<WSAttribute>(asm).ToDictionary(x => x.Key.url, x => x.Value);
+            HeaderAttributeToMethods = AttributeMethodHelper.GetMethodAndAttribute<HTTPHeaderAttribute>(asm);
+        }
         public void OverrideAttribute(Assembly assembly)
         {
             HTTP_AttributeToMethods.Override(assembly);

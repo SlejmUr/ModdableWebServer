@@ -16,7 +16,7 @@
     <PackageTags>ModdableWebServer;webserver;web</PackageTags>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageReleaseNotes>$(Version)!</PackageReleaseNotes>
-    <Version>1.7.1</Version>
+    <Version>1.8</Version>
     <FileVersion>$(Version)</FileVersion>
     <AssemblyVersion>$(Version)</AssemblyVersion>
 	<LangVersion>12</LangVersion>

@@ -21,30 +21,24 @@ namespace ModdableWebServer.Servers
 
         public bool DoReturn404IfFail = true;
         public HTTPS_Server(SslContext context, IPAddress address, int port) : base(context, address, port)
-        {
-            AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
-            HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
-        }
+            => Load();
 
         public HTTPS_Server(SslContext context, string address, int port) : base(context, address, port)
-        {
-            AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
-            HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
-        }
+            => Load();
 
         public HTTPS_Server(SslContext context, DnsEndPoint endpoint) : base(context, endpoint)
-        {
-            AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
-            HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
-        }
+            => Load();
 
         public HTTPS_Server(SslContext context, IPEndPoint ipEndPoint) : base(context, ipEndPoint)
-        {
-            AttributeToMethods = AttributeMethodHelper.UrlHTTPLoader(Assembly.GetAssembly(typeof(HTTPAttribute)));
-            HeaderAttributeToMethods = AttributeMethodHelper.UrlHTTPHeaderLoader(Assembly.GetAssembly(typeof(HTTPHeaderAttribute)));
-        }
+            => Load();
 
         #region Attribute Controls
+        private void Load()
+        {
+            Assembly? asm = Assembly.GetAssembly(typeof(HTTPAttribute));
+            AttributeToMethods = AttributeMethodHelper.GetMethodAndAttribute<HTTPAttribute>(asm);
+            HeaderAttributeToMethods = AttributeMethodHelper.GetMethodAndAttribute<HTTPHeaderAttribute>(asm);
+        }
         public void OverrideAttribute(Assembly assembly)
         {
             AttributeToMethods.Override(assembly);

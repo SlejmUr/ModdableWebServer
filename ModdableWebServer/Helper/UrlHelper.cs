@@ -83,8 +83,8 @@ public class UrlHelper
         if (!pattern.Contains('}'))
             return string.Empty;
 
-        int indexStart = pattern.IndexOf("{");
-        int indexEnd = pattern.LastIndexOf("}");
+        int indexStart = pattern.IndexOf('{');
+        int indexEnd = pattern.LastIndexOf('}');
         if (indexEnd - 1 > indexStart)
         {
             return pattern.Substring(indexStart, indexEnd - indexStart + 1);

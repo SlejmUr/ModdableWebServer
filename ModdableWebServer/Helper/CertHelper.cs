@@ -18,7 +18,7 @@ public class CertHelper
         return new X509Certificate2(File.ReadAllBytes(pfxPath), password);
     }
 
-    public static X509Certificate GetCertWithPath(string certPath, string keyPath)
+    public static X509Certificate GetCertPem(string certPath, string keyPath)
     {
         if (string.IsNullOrEmpty(certPath))
             throw new ArgumentNullException(nameof(certPath));
@@ -39,9 +39,19 @@ public class CertHelper
     {
         return new SslContext(sslprotocol, GetCert(pfxPath, password));
     }
+
     public static SslContext GetContextNoValidate(SslProtocols sslprotocol, string pfxPath, string password)
     {
         return new SslContext(sslprotocol, GetCert(pfxPath, password), new RemoteCertificateValidationCallback(NoCertificateValidator));
+    }
+
+    public static SslContext GetContextPem(SslProtocols sslprotocol, string pfxPath, string password)
+    {
+        return new SslContext(sslprotocol, GetCertPem(pfxPath, password));
+    }
+    public static SslContext GetContextPamNoValidate(SslProtocols sslprotocol, string pfxPath, string password)
+    {
+        return new SslContext(sslprotocol, GetCertPem(pfxPath, password), new RemoteCertificateValidationCallback(NoCertificateValidator));
     }
 
     public static bool NoCertificateValidator(object? sender, X509Certificate? certificate, X509Chain? chain, SslPolicyErrors sslPolicyErrors)
