@@ -5,13 +5,6 @@ This project is made because I used more than 2 project the NetCoreServer Librar
 
 I am really bad at making a Good Documentation. Please help!
 # Using the Library
-## HTTP(S)
-### What is ServerStruct?
-You only Need to know you can get the Headers, URL Parameters, and can parse a Response to it.
-
-About Headers & Parameters:
-Duplication is been reduced. (Please do not use same parameter in url.)\
-Key of it is lowercase
 
 ### Response Creator
 Creating response simple.
@@ -54,7 +47,7 @@ In Method can be used any HTTP/S Method.\
 GET, POST, HEAD, OPTION, DELETE is accepted.
 
 In the Url you can use the full url, or making it as parameter\
-If you use parameter you can use `?{args}` to parse every arg into the parameters
+If you use parameter you can use `?{!args}` to parse every arg into the parameters
 
 ```csharp
 //url
@@ -67,20 +60,19 @@ If you use parameter you can use `?{args}` to parse every arg into the parameter
 [HTTP("GET", "/hey/{parameters}?user={username}")]
 
 //parameter and args
-[HTTP("GET", "/hey/{parameters}?{args}")]
+[HTTP("GET", "/hey/{parameters}?{!args}")]
 ```
 
-Make sure your Function is PUBLIC, STATIC, and must return a BOOL.
+Make sure your Function must be STATIC and must return a BOOL.
 
 
 ```csharp
 [HTTP("GET", "/test")]
-public static bool test(HttpRequest request, ServerStruct serverStruct)
+public static bool test(ServerSender sender)
 {
 	//simple response making
-	serverStruct.Response.MakeOkResponse();
-	//And sending the response.
-	serverStruct.SendResponse();
+    sender.Response.MakeOkResponse();
+    sender.SendResponse();
 	//return is if the page exist or not. It will try to send 404 if false.
 	return true;
 }
@@ -90,7 +82,7 @@ Example or Return a false:
 
 ```csharp
 [HTTP("GET", "/throw404")]
-public static bool throw_404(HttpRequest request, ServerStruct serverStruct)
+public static bool throw_404(ServerSender _)
 {
 	return false;
 }
@@ -99,22 +91,11 @@ public static bool throw_404(HttpRequest request, ServerStruct serverStruct)
 
 ## WS(S)
 
-### What is WebSocketStruct?
-It contains:
-- Request of the Connection.
-	- The url.
-	- Headers
-	- Parameters,
-	- Body
-- Is Connected or not.
-- WebSocket Bytes Request (NULLABLE)
-- Two Session for each type (WS,WSS)
-- Enum, which is currently used.
 ### Use of WSAttribute
 
 In the Url you can use the full url, or making it as parameter
 
-Make sure your Function is PUBLIC, STATIC, and must a VOID.
+Make sure your Function is STATIC, and must a VOID.
 
 ```csharp
  [WS("/ws/{test}")]
@@ -176,39 +157,22 @@ ws_server.Start();
 ws_server.Stop();
 ```
 
-### Events
-Each HTTP(S) server comes with event like:
-
-```csharp
-public EventHandler<(HttpRequest request, string error)> ReceivedRequestError;
-public EventHandler<SocketError> OnSocketError;
-public EventHandler<HttpRequest> ReceivedFailed;
-public event EventHandler<(string address, int port)> Started;
-public event EventHandler Stopped;
-```
-
-WS(S) Only add one:
-
-```csharp
-public EventHandler<string> WSError;
-```
 ### Adding our created Attributes to the Server
 
 Merging (Will fail if other DLL already contains url/method)
 ```csharp
-// Loading Entry assembly contained HTTP/WS Attribute and merging.
-ws_server.HTTP_AttributeToMethods.Merge(Assembly.GetEntryAssembly());
-ws_server.WS_AttributeToMethods.Merge(Assembly.GetEntryAssembly());
-http_server.AttributeToMethods.Merge(Assembly.GetEntryAssembly());
+// Loading Entry assembly contained HTTP/HTTPHeader/WS Attribute and merging.
+ws_server.HTTPAttributeToMethods.Merge(Assembly.GetEntryAssembly());
+// ONLY available for WebSocket servers.
+ws_server.WSAttributeToMethods.Merge(Assembly.GetEntryAssembly()); 
 ```
 
 Overriding.
 It will replace already existing ones.
 ```csharp
 // Loading Entry assembly contained HTTP/WS Attribute and merging.
-ws_server.HTTP_AttributeToMethods.Override(Assembly.GetEntryAssembly());
-ws_server.WS_AttributeToMethods.Override(Assembly.GetEntryAssembly());
-http_server.AttributeToMethods.Override(Assembly.GetEntryAssembly());
+ws_server.HTTPAttributeToMethods.Override(Assembly.GetEntryAssembly());
+ws_server.WSAttributeToMethods.Override(Assembly.GetEntryAssembly());
 ```
 
 ### Assembly Difference

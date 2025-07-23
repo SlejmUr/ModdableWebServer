@@ -1,4 +1,4 @@
-﻿using NetCoreServer;
+﻿using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ModdableWebServer.Helper;
 
@@ -71,4 +71,5 @@ public class ResponseCreator
         return response;
     }
 
+    public static implicit operator HttpResponse(ResponseCreator creator) => creator.response;
 }

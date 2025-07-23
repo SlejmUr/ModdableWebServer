@@ -3,6 +3,6 @@
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
 public class HTTPAttribute(string method, string url) : Attribute
 {
-    public string method = method;
-    public string url = url;
+    public string Method = method;
+    public string Url = url;
 }

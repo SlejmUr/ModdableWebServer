@@ -1,140 +1,48 @@
 ﻿using ModdableWebServer.Attributes;
 using ModdableWebServer.Helper;
-using NetCoreServer;
+using ModdableWebServer.Interfaces;
+using ModdableWebServer.Sessions;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 
-namespace ModdableWebServer.Servers
+namespace ModdableWebServer.Servers;
+
+public class HTTPS_Server : HttpsServer, IServer
 {
-    public class HTTPS_Server : HttpsServer
+    public HTTPS_Server(SslContext context, IPAddress address, int port) : base(context, address, port) { }
+    public HTTPS_Server(SslContext context, string address, int port) : base(context, address, port) { }
+    public HTTPS_Server(SslContext context, DnsEndPoint endpoint) : base(context, endpoint) { }
+    public HTTPS_Server(SslContext context, IPEndPoint ipEndPoint) : base(context, ipEndPoint) { }
+
+    public Dictionary<HTTPAttribute, MethodInfo> HTTPAttributeToMethods { get; } = [];
+    public Dictionary<HTTPHeaderAttribute, MethodInfo> HeaderAttributeToMethods { get; } = [];
+    public bool DoReturn404IfFail { get; set; } = true;
+
+    #region Attribute Controls
+    public void OverrideAttributes(Assembly assembly)
     {
-        #region Events
-        public EventHandler<(HttpRequest request, string error)>? ReceivedRequestError = null;
-        public EventHandler<SocketError>? OnSocketError = null;
-        public EventHandler<HttpRequest>? ReceivedFailed = null;
-        public event EventHandler<(string address, int port)>? Started = null;
-        public event EventHandler? Stopped = null;
-        #endregion
-        public Dictionary<HTTPAttribute, MethodInfo> AttributeToMethods = [];
-        public Dictionary<HTTPHeaderAttribute, MethodInfo> HeaderAttributeToMethods = [];
-
-        public bool DoReturn404IfFail = true;
-        public HTTPS_Server(SslContext context, IPAddress address, int port) : base(context, address, port)
-            => Load();
-
-        public HTTPS_Server(SslContext context, string address, int port) : base(context, address, port)
-            => Load();
-
-        public HTTPS_Server(SslContext context, DnsEndPoint endpoint) : base(context, endpoint)
-            => Load();
-
-        public HTTPS_Server(SslContext context, IPEndPoint ipEndPoint) : base(context, ipEndPoint)
-            => Load();
-
-        #region Attribute Controls
-        private void Load()
-        {
-            Assembly? asm = Assembly.GetAssembly(typeof(HTTPAttribute));
-            AttributeToMethods = AttributeMethodHelper.GetMethodAndAttribute<HTTPAttribute>(asm);
-            HeaderAttributeToMethods = AttributeMethodHelper.GetMethodAndAttribute<HTTPHeaderAttribute>(asm);
-        }
-        public void OverrideAttribute(Assembly assembly)
-        {
-            AttributeToMethods.Override(assembly);
-        }
-
-        public void MergeAttribute(Assembly assembly)
-        {
-            AttributeToMethods.Merge(assembly);
-        }
-
-        public void ClearAttribute()
-        {
-            AttributeToMethods.Clear();
-        }
-        public void OverrideHeaderAttribute(Assembly assembly)
-        {
-            HeaderAttributeToMethods.Override(assembly);
-        }
-
-        public void MergeHeaderAttribute(Assembly assembly)
-        {
-            HeaderAttributeToMethods.Merge(assembly);
-        }
-
-        public void ClearHeaderAttribute()
-        {
-            HeaderAttributeToMethods.Clear();
-        }
-
-        public void OverrideAttributes(Assembly assembly)
-        {
-            HeaderAttributeToMethods.Override(assembly);
-            AttributeToMethods.Override(assembly);
-        }
-
-        public void MergeAttributes(Assembly assembly)
-        {
-            HeaderAttributeToMethods.Merge(assembly);
-            AttributeToMethods.Merge(assembly);
-        }
-
-        public void ClearAttributes()
-        {
-            HeaderAttributeToMethods.Clear();
-            AttributeToMethods.Clear();
-        }
-
-        #endregion
-        #region Overrides
-        protected override void OnStarted() => Started?.Invoke(this, (Address, Port));
-
-        protected override void OnStopped() => Stopped?.Invoke(this, new());
-
-        protected override SslSession CreateSession() { return new Session(this); }
-
-        protected override void OnError(SocketError error) => OnSocketError?.Invoke(this, error);
-        #endregion
-
-        public class Session(HttpsServer server) : HttpsSession(server)
-        {
-            public HTTPS_Server HTTPS_Server => (HTTPS_Server)this.Server;
-
-            #region Overrides
-            protected override void OnReceivedRequest(HttpRequest request)
-            {
-                if (request.Method == "GET" && !request.Url.Contains('?') && this.Cache.FindPath(request.Url))
-                {
-                    var cache = this.Cache.Find(request.Url);
-                    // Check again to make sure.
-                    if (cache.Item1)
-                        this.SendAsync(cache.Item2);
-                }
-
-                ServerStruct serverStruct = new()
-                {
-                    HTTPS_Session = this,
-                    Response = this.Response,
-                    Enum = ServerEnum.HTTPS
-                };
-
-                bool IsSent = serverStruct.SendRequestHTTP(request, HTTPS_Server.AttributeToMethods);
-                bool IsSent_header = serverStruct.SendRequestHTTPHeader(request, HTTPS_Server.HeaderAttributeToMethods);
-
-                DebugPrinter.Debug("[HttpsSession.OnReceivedRequest] Request sent!");
-
-                if (!IsSent && !IsSent_header)
-                    HTTPS_Server.ReceivedFailed?.Invoke(this, request);
-
-                if (HTTPS_Server.DoReturn404IfFail && (!IsSent && !IsSent_header))
-                    SendResponse(Response.MakeErrorResponse(404));
-            }
-
-            protected override void OnReceivedRequestError(HttpRequest request, string error) => HTTPS_Server.ReceivedRequestError?.Invoke(this, (request, error));
-
-            protected override void OnError(SocketError error) => HTTPS_Server.OnSocketError?.Invoke(null, error);
-            #endregion
-        }
+        HeaderAttributeToMethods.Override(assembly);
+        HTTPAttributeToMethods.Override(assembly);
     }
+
+    public void MergeAttributes(Assembly assembly)
+    {
+        HeaderAttributeToMethods.Merge(assembly);
+        HTTPAttributeToMethods.Merge(assembly);
+    }
+
+    public void ClearAttributes()
+    {
+        HeaderAttributeToMethods.Clear();
+        HTTPAttributeToMethods.Clear();
+    }
+
+    #endregion
+    #region Overrides
+    protected override void OnStarted() => ServerEvents.OnStarted(this);
+    protected override void OnStopped() => ServerEvents.OnStopped(this);
+    protected override SslSession CreateSession() => new HTTPS_Session(this);
+    protected override void OnError(SocketError error) => ServerEvents.OnSocketError(this, error);
+    #endregion
 }

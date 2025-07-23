@@ -1,7 +1,8 @@
 ﻿namespace ModdableWebServer.Attributes;
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-public class WSAttribute(string url) : Attribute
+public class WSAttribute(string url, WebSocketMethodListen listenMethod) : Attribute
 {
-    public string url = url;
+    public string Url = url;
+    public WebSocketMethodListen ListenMethod = listenMethod;
 }

@@ -1,6 +1,6 @@
 ﻿namespace ModdableWebServer.Helper;
 
-public class UrlHelper
+public static class UrlHelper
 {
     #region Parameter url stuff
     public static bool Match(string url, string pattern, out Dictionary<string, string> vals)
@@ -12,64 +12,65 @@ public class UrlHelper
         string[] urlParts = SplitUrl(url);
         string[] patternParts = SplitUrl(pattern);
 
-        if (urlParts.Length != patternParts.Length)
+        int urlLen = urlParts.Where(static x => !x.Contains('=')).ToArray().Length;
+        int patternLen = patternParts.Where(static x => !x.Contains("!args")).ToArray().Length;
+
+        if (urlLen != patternLen)
             return false;
 
-        DebugPrinter.Debug("URL Parts: " + string.Join(" ", urlParts));
-        DebugPrinter.Debug("Pattern Paths: " + string.Join(" ", patternParts));
+        Log.Verbose("URL Parts: " + string.Join(" ", urlParts));
+        Log.Verbose("Pattern Paths: " + string.Join(" ", patternParts));
 
-        if (patternParts.Length >= 2 && 
+        // TODO: fix this shit show.
+        bool hasArg = patternParts.Length >= 1 && 
             pattern.Contains('?') && 
-            pattern.Split("?")[1] == "{args}")
-        {
-            for (int i = 0; i < urlParts.Length; i++)
-            {
-                if ((patternParts.Length - 1) <= i)
-                {
-                    var url_part = urlParts[i].Split('=');
-                    vals.Add(url_part[0], url_part[1]);
-                    continue;
-                }
-                string paramName = ExtractParameter(patternParts[i]);
+            pattern.Split("?")[1] == "{!args}";
 
-                if (string.IsNullOrEmpty(paramName))
-                {
-                    // no pattern
-                    if (!urlParts[i].Equals(patternParts[i]))
-                    {
-                        vals = [];
-                        return false;
-                    }
-                }
-                else
-                {
-                    vals.Add(
-                        paramName.Replace("{", "").Replace("}", ""),
-                        urlParts[i].Split('=').Last());
-                }
-            }
-            return true;
-        }
-
+        // Normal parameter parsing.
         for (int i = 0; i < urlParts.Length; i++)
         {
-            string paramName = ExtractParameter(patternParts[i]);
-            if (string.IsNullOrEmpty(paramName))
+            string part = urlParts[i];
+            if (hasArg && (patternParts.Length - 1) <= i && part.Contains('='))
             {
-                // no pattern
-                if (!urlParts[i].Equals(patternParts[i]))
-                {
-                    vals = [];
-                    return false;
-                }
+                var url_part = part.Split('=');
+                vals.Add(url_part[0], url_part[1]);
+                continue;
             }
-            else
+            if (!ParseParameter(part, patternParts[i], ref vals))
+                return false;
+        }
+        return true;
+    }
+
+    private static bool ParseParameter(string urlPart, string patternPart, ref Dictionary<string, string> vals)
+    {
+        string paramName = ExtractParameter(patternPart);
+        if (string.IsNullOrEmpty(paramName))
+        {
+            // no pattern
+            if (!urlPart.Equals(patternPart))
             {
-                vals.Add(
-                    paramName.Replace("{", "").Replace("}", ""),
-                    urlParts[i].Split('=').Last());
+                vals = [];
+                return false;
             }
         }
+        else
+        {
+            vals.Add(
+            paramName.Replace("{", string.Empty).Replace("}", string.Empty),
+                urlPart.Split('=').Last());
+        }
+         
+        /*
+        string paramName = ExtractParameter(patternPart);
+        Log.Verbose("URL Part: {Path} PatternPath {Path} ", urlPart, patternPart);
+        if (string.IsNullOrEmpty(paramName) || !urlPart.Equals(patternPart))
+            return false;
+        if (!string.IsNullOrEmpty(paramName))
+            vals.Add(
+            paramName.Replace("{", string.Empty).Replace("}", string.Empty),
+            urlPart.Split('=').Last());
+        */
         return true;
     }
 
@@ -85,10 +86,10 @@ public class UrlHelper
 
         int indexStart = pattern.IndexOf('{');
         int indexEnd = pattern.LastIndexOf('}');
+
         if (indexEnd - 1 > indexStart)
-        {
             return pattern.Substring(indexStart, indexEnd - indexStart + 1);
-        }
+
         return string.Empty;
     }
 

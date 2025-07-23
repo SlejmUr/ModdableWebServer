@@ -1,9 +1,13 @@
-﻿using ModdableWebServer.Attributes;
+﻿using ModdableWebServer;
+using ModdableWebServer.Attributes;
 using ModdableWebServer.Helper;
-using ModdableWebServer;
+using ModdableWebServer.Interfaces;
+using ModdableWebServer.Senders;
 using ModdableWebServer.Servers;
 using NetCoreServer;
+using Serilog;
 using System.Net.Sockets;
+using System.Net.WebSockets;
 using System.Reflection;
 
 namespace ConsoleApp;
@@ -12,35 +16,40 @@ internal class Program
 {
 
     [HTTP("GET", "/yeet")]
-    public static bool Yeet(HttpRequest _, ServerStruct serverStruct)
+    public static bool Yeet(ServerSender server)
     {
-        serverStruct.Response.MakeGetResponse("yeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeet");
-        serverStruct.SendResponse();
+        server.Session.Response.MakeGetResponse("yeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeet");
+        server.Session.SendResponse();
         return true;
     }
 
     [HTTP("GET", "/test")]
-    public static bool Test3333(HttpRequest _, ServerStruct serverStruct)
+    public static bool Test3333(ServerSender server)
     {
-        serverStruct.Response.MakeGetResponse("teseststs");
-        serverStruct.SendResponse();
+        server.Session.Response.MakeGetResponse("teseststs");
+        server.Session.SendResponse();
         return true;
     }
 
     static void Main(string[] _)
     {
-        DebugPrinter.EnableLogs = true;
-        DebugPrinter.PrintToConsole = true;
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Verbose()
+            .WriteTo.File("logs.txt", outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+            .WriteTo.Console(outputTemplate: "{Timestamp:HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+            .CreateLogger();
         Console.WriteLine("Hello, World!");
         //CertHelper.GetContextNoValidate( SslProtocols.Tls12, "mypfx.pfx", "asecurepassword");
         var server = new WS_Server("127.0.0.1", 7777);
         //this override all attributes
+        server.OverrideAttributes(Assembly.GetAssembly(typeof(WS_Server))!);
         server.OverrideAttributes(Assembly.GetEntryAssembly()!);
-        server.ReceivedRequestError += ReceivedRequestError;
-        server.WSError += WSError;
-        server.OnSocketError += OnSocketError;
-        server.Started += HTTP_Server_OnStarted;
-        server.Stopped += HTTP_Server_OnStopped;
+        ServerEvents.ReceivedFailed += ServerEvents_ReceivedFailed;
+        ServerEvents.ReceivedRequestError += ReceivedRequestError;
+        ServerEvents.WebSocketError += WebSocketError_Event;
+        ServerEvents.SocketError += OnSocketError;
+        ServerEvents.Started += HTTP_Server_OnStarted;
+        ServerEvents.Stopped += HTTP_Server_OnStopped;
         // In net8 this is a must be!
         server.AddStaticContent("static", string.Empty);
         server.Start();
@@ -49,28 +58,33 @@ internal class Program
         Console.ReadLine();
     }
 
-    private static void OnSocketError(object? sender, SocketError error)
+    private static void ServerEvents_ReceivedFailed(IServer arg1, HttpRequest arg2)
     {
-        Console.WriteLine("error " + error);
+        Console.WriteLine("ServerEvents_ReceivedFailed!");
     }
 
-    private static void WSError(object? sender, string wserror)
+    private static void HTTP_Server_OnStopped(IServer server)
     {
-        Console.WriteLine("error " + wserror);
+        Console.WriteLine("HTTP_Server_OnStopped!");
     }
 
-    private static void HTTP_Server_OnStopped(object? sender, EventArgs e)
+    private static void HTTP_Server_OnStarted(IServer server)
     {
-        Console.WriteLine("server stopped");
+        Console.WriteLine("HTTP_Server_OnStarted!");
     }
 
-    private static void HTTP_Server_OnStarted(object? sender, (string address, int port) e)
+    private static void OnSocketError(IServer server, SocketError error)
     {
-        Console.WriteLine($"Server started: http://{e.address}:{e.port}");
+        Console.WriteLine("OnSocketError!");
     }
 
-    private static void ReceivedRequestError(object? sender, (HttpRequest request, string error) sent)
+    private static void WebSocketError_Event(IWSServer server, string arg2)
     {
-        Console.WriteLine($"HTTP_Server ReceivedRequestError: {sent.error}");
+        Console.WriteLine("WebSocketError_Event!");
+    }
+
+    private static void ReceivedRequestError(IServer server, HttpRequest request, string arg3)
+    {
+        Console.WriteLine("ReceivedRequestError!");
     }
 }

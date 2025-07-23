@@ -30,9 +30,9 @@
             Console.WriteLine("Press Enter to stop the client or '!' to reconnect the client...");
 
             // Perform text input
-            for (; ; )
+            while (true)
             {
-                string line = Console.ReadLine();
+                string? line = Console.ReadLine();
                 if (string.IsNullOrEmpty(line))
                     break;
 

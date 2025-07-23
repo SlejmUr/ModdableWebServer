@@ -1,11 +1,10 @@
-﻿using NetCoreServer;
-using System.Net.Security;
+﻿using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
 namespace ModdableWebServer.Helper;
 
-public class CertHelper
+public static class CertHelper
 {
     public static X509Certificate GetCert(string pfxPath, string password)
     {
@@ -14,8 +13,12 @@ public class CertHelper
 
         if (!File.Exists(pfxPath))
             throw new FileNotFoundException($"{pfxPath} File not found");
-
+#if NET9_0_OR_GREATER
+        return X509CertificateLoader.LoadPkcs12FromFile(pfxPath, password);
+#else
         return new X509Certificate2(File.ReadAllBytes(pfxPath), password);
+#endif
+
     }
 
     public static X509Certificate GetCertPem(string certPath, string keyPath)
@@ -32,7 +35,12 @@ public class CertHelper
         if (!File.Exists(keyPath))
             throw new FileNotFoundException($"{keyPath} File not found");
 
-        return new X509Certificate2(X509Certificate2.CreateFromPemFile(certPath, keyPath).Export(X509ContentType.Pfx));
+        byte[] data = X509Certificate2.CreateFromPemFile(certPath, keyPath).Export(X509ContentType.Pfx);
+#if NET9_0_OR_GREATER
+        return X509CertificateLoader.LoadCertificate(data);
+#else
+        return new X509Certificate2(data);
+#endif
     }
 
     public static SslContext GetContext(SslProtocols sslprotocol, string pfxPath, string password)
@@ -42,20 +50,18 @@ public class CertHelper
 
     public static SslContext GetContextNoValidate(SslProtocols sslprotocol, string pfxPath, string password)
     {
-        return new SslContext(sslprotocol, GetCert(pfxPath, password), new RemoteCertificateValidationCallback(NoCertificateValidator));
+        return new SslContext(sslprotocol, GetCert(pfxPath, password), NoCertificateValidator);
     }
 
-    public static SslContext GetContextPem(SslProtocols sslprotocol, string pfxPath, string password)
+    public static SslContext GetContextPem(SslProtocols sslprotocol, string certPath, string keyPath)
     {
-        return new SslContext(sslprotocol, GetCertPem(pfxPath, password));
+        return new SslContext(sslprotocol, GetCertPem(certPath, keyPath));
     }
-    public static SslContext GetContextPamNoValidate(SslProtocols sslprotocol, string pfxPath, string password)
+    public static SslContext GetContextPamNoValidate(SslProtocols sslprotocol, string certPath, string keyPath)
     {
-        return new SslContext(sslprotocol, GetCertPem(pfxPath, password), new RemoteCertificateValidationCallback(NoCertificateValidator));
+        return new SslContext(sslprotocol, GetCertPem(certPath, keyPath), NoCertificateValidator);
     }
 
     public static bool NoCertificateValidator(object? sender, X509Certificate? certificate, X509Chain? chain, SslPolicyErrors sslPolicyErrors)
-    {
-        return true;
-    }
+        => true;
 }

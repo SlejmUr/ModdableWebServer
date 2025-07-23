@@ -1,6 +1,4 @@
-﻿using NetCoreServer;
-
-namespace ModdableWebServer.Helper;
+﻿namespace ModdableWebServer.Helper;
 
 public static class RequestExport
 {
@@ -15,5 +13,16 @@ public static class RequestExport
                 Headers.Add(headerpart.Item1.ToLower(), headerpart.Item2);
         }
         return Headers;
+    }
+
+    public static void PopulateHeaders(this HttpRequest request, Dictionary<string, string> Headers)
+    {
+        Headers.Clear();
+        for (int i = 0; i < request.Headers; i++)
+        {
+            var headerpart = request.Header(i);
+            if (!Headers.ContainsKey(headerpart.Item1.ToLower()))
+                Headers.Add(headerpart.Item1.ToLower(), headerpart.Item2);
+        }
     }
 }
