@@ -12,7 +12,6 @@ public class WS_Session(WsServer server) : WsSession(server), IWSSession
     #region Overrides
     protected override void OnConnecting()
     {
-        base.OnConnecting();
         Sender = new()
         {
             ServerType = ServerType.WS,
@@ -20,6 +19,7 @@ public class WS_Session(WsServer server) : WsSession(server), IWSSession
             Session = this
         };
     }
+    
     protected override void OnReceivedRequest(HttpRequest request)
     {
         if (request.Method == "GET" && !request.Url.Contains('?') && Cache.FindPath(request.Url))

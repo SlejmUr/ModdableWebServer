@@ -7,7 +7,6 @@ namespace ModdableWebServer.Sessions;
 public class HTTPS_Session(HttpsServer server) : HttpsSession(server), ISession
 {
     public IServer IServer => (IServer)Server;
-
     private ServerSender Sender = default!;
 
     protected override void OnConnecting()
