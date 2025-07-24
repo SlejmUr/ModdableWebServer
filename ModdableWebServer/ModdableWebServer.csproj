@@ -16,9 +16,9 @@
     <PackageTags>ModdableWebServer;webserver;web</PackageTags>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageReleaseNotes>$(Version)!</PackageReleaseNotes>
-    <Version>2.0</Version>
-    <FileVersion>$(Version)</FileVersion>
-    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <Version>$(FileVersion)-alpha</Version>
+    <FileVersion>2.0</FileVersion>
+    <AssemblyVersion>$(FileVersion)</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
