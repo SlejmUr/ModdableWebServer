@@ -2,6 +2,8 @@
 
 public static class UrlHelper
 {
+    public static string ReasonFail { get; protected set; }
+
     #region Parameter url stuff
     public static bool Match(string url, string pattern, out Dictionary<string, string> vals)
     {
@@ -14,6 +16,8 @@ public static class UrlHelper
 
         int urlLen = urlParts.Where(static x => !x.Contains('=')).ToArray().Length;
         int patternLen = patternParts.Where(static x => !x.Contains("!args")).ToArray().Length;
+
+        ReasonFail = $"Pattern len not same!\n {urlLen} != {patternLen}\nUrlParts:{string.Join(" ", urlParts)}\nPatternPaths: {string.Join(" ", patternParts)}";
 
         if (urlLen != patternLen)
             return false;
@@ -37,8 +41,12 @@ public static class UrlHelper
                 continue;
             }
             if (!ParseParameter(part, patternParts[i], ref vals))
+            {
+                ReasonFail = $"Parsing parameters did not work out {part} {patternParts[i]}";
                 return false;
+            }
         }
+        ReasonFail = string.Empty;
         return true;
     }
 

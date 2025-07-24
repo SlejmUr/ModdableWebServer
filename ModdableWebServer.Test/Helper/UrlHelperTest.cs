@@ -8,7 +8,9 @@ public class UrlHelperTest
         Dictionary<string, string> expected = [];
         Dictionary<string, string> kvs = [];
 
-        Assert.That(UrlHelper.Match("/myurlTest", "/myurlTest", out kvs), Is.True);
+        bool ret = UrlHelper.Match("/myurlTest", "/myurlTest", out kvs);
+        Assert.That(UrlHelper.ReasonFail, Is.Empty);
+        Assert.That(ret, Is.True);
         Assert.That(expected, Is.EqualTo(kvs));
     }
 
@@ -20,7 +22,10 @@ public class UrlHelperTest
             { "meowparam", "meow" },
         };
         Dictionary<string, string> kvs = [];
-        Assert.That(UrlHelper.Match("/myurlTest/meow", "/myurlTest/{meowparam}", out kvs), Is.True);
+
+        bool ret = UrlHelper.Match("/myurlTest/meow", "/myurlTest/{meowparam}", out kvs);
+        Assert.That(UrlHelper.ReasonFail, Is.Empty);
+        Assert.That(ret, Is.True);
         Assert.That(expected, Is.EqualTo(kvs));
     }
 
@@ -33,7 +38,9 @@ public class UrlHelperTest
         };
         Dictionary<string, string> kvs = [];
 
-        Assert.That(UrlHelper.Match("/myurlTest/test?arg1=test", "/myurlTest/test?arg1={arg1}", out kvs), Is.True);
+        bool ret = UrlHelper.Match("/myurlTest/test?arg1=test", "/myurlTest/test?arg1={arg1}", out kvs);
+        Assert.That(UrlHelper.ReasonFail, Is.Empty);
+        Assert.That(ret, Is.True);
         Assert.That(expected, Is.EqualTo(kvs));
     }
 
@@ -47,7 +54,9 @@ public class UrlHelperTest
         };
         Dictionary<string, string> kvs = [];
 
-        Assert.That(UrlHelper.Match("/myurlTest/test?arg1=1&arg2=2", "/myurlTest/test?arg1={arg1}&arg2={arg2}", out kvs), Is.True);
+        bool ret = UrlHelper.Match("/myurlTest/test?arg1=1&arg2=2", "/myurlTest/test?arg1={arg1}&arg2={arg2}", out kvs);
+        Assert.That(UrlHelper.ReasonFail, Is.Empty);
+        Assert.That(ret, Is.True);
         Assert.That(expected, Is.EqualTo(kvs));
     }
 
@@ -62,7 +71,9 @@ public class UrlHelperTest
         };
         Dictionary<string, string> kvs = [];
 
-        Assert.That(UrlHelper.Match("/myurlTest/test?arg1=1&arg2=2", "/myurlTest/test?{!args}", out kvs), Is.True);
+        bool ret = UrlHelper.Match("/myurlTest/test?arg1=1&arg2=2", "/myurlTest/test?{!args}", out kvs);
+        Assert.That(UrlHelper.ReasonFail, Is.Empty);
+        Assert.That(ret, Is.True);
         Assert.That(expected, Is.EqualTo(kvs));
     }
 }
