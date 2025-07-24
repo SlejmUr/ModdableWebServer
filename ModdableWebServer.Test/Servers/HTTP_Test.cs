@@ -1,4 +1,6 @@
 using NetCoreServer;
+using System.Net;
+using System.Reflection;
 
 namespace ModdableWebServer.Servers.Test;
 
@@ -12,6 +14,14 @@ public class HTTP_Test
     {
         server = new(IPAddress.Any, 6666);
         client = new HttpClientEx(IPAddress.Any, 6666);
+    }
+
+    
+    [TearDown]
+    public void TearDown()
+    {
+        server.Dispose();
+        client.Dispose();
     }
 
     [Test]
