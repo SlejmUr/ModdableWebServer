@@ -15,10 +15,10 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>ModdableWebServer;webserver;web</PackageTags>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <PackageReleaseNotes>$(Version)!</PackageReleaseNotes>
-    <Version>$(FileVersion)-alpha</Version>
     <FileVersion>2.0.0</FileVersion>
+    <Version>2.0.0-alpha</Version>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
+    <PackageReleaseNotes>$(Version)!</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
