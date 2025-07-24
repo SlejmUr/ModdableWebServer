@@ -17,7 +17,7 @@
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageReleaseNotes>$(Version)!</PackageReleaseNotes>
     <Version>$(FileVersion)-alpha</Version>
-    <FileVersion>2.0</FileVersion>
+    <FileVersion>2.0.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
   </PropertyGroup>
 
