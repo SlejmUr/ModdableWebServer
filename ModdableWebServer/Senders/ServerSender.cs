@@ -31,9 +31,10 @@ public class ServerSender
         string url = Uri.UnescapeDataString(Request.Url);
         Log.Verbose("Requesting with URL: {url}", url);
         bool Sent = false;
+        Dictionary<string, string> out_params = [];
         foreach (var item in Server.HTTPAttributeToMethods)
         {
-            if ((item.Key.Url == url || UrlHelper.Match(url, item.Key.Url, out Dictionary<string, string> out_params)) &&
+            if ((item.Key.Url == url || UrlHelper.Match(url, item.Key.Url, out out_params)) &&
                 Request.Method.Equals(item.Key.Method, StringComparison.CurrentCultureIgnoreCase))
             {
                 Log.Verbose($"URL Matched! {url}");
@@ -45,7 +46,7 @@ public class ServerSender
         }
         foreach (var item in Server.HeaderAttributeToMethods)
         {
-            if ((item.Key.Url == url || UrlHelper.Match(url, item.Key.Url, out Dictionary<string, string> out_params)) &&
+            if ((item.Key.Url == url || UrlHelper.Match(url, item.Key.Url, out out_params)) &&
                 Request.Method.Equals(item.Key.Method, StringComparison.CurrentCultureIgnoreCase))
             {
                 Log.Verbose($"URL Matched! {url}");
