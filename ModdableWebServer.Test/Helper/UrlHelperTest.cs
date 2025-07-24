@@ -76,4 +76,22 @@ public class UrlHelperTest
         Assert.That(ret, Is.True);
         Assert.That(expected, Is.EqualTo(kvs));
     }
+
+    [Test]
+    public void TestEveryArg()
+    {
+        Dictionary<string, string> expected = new()
+        {
+            { "param" , "myurlTest" },
+            { "yeet" , "test" },
+            { "arg1" , "1" },
+            { "arg2" , "2" },
+        };
+        Dictionary<string, string> kvs = [];
+
+        bool ret = UrlHelper.Match("/myurlTest/test?arg1=1&arg2=2", "/{param}/{yeet}/?{!args}", out kvs);
+        Assert.That(UrlHelper.ReasonFail, Is.Empty);
+        Assert.That(ret, Is.True);
+        Assert.That(expected, Is.EqualTo(kvs));
+    }
 }
