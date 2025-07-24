@@ -10,14 +10,11 @@ namespace ModdableWebServer.Servers;
 
 public class HTTPS_Server : HttpsServer, IServer
 {
-    public HTTPS_Server(SslContext context, IPAddress address, int port) : base(context, address, port) { }
+
     public HTTPS_Server(SslContext context, string address, int port) : base(context, address, port) { }
+    public HTTPS_Server(SslContext context, IPAddress address, int port) : base(context, address, port) { }
     public HTTPS_Server(SslContext context, DnsEndPoint endpoint) : base(context, endpoint) { }
     public HTTPS_Server(SslContext context, IPEndPoint ipEndPoint) : base(context, ipEndPoint) { }
-
-    public Dictionary<HTTPAttribute, MethodInfo> HTTPAttributeToMethods { get; } = [];
-    public Dictionary<HTTPHeaderAttribute, MethodInfo> HeaderAttributeToMethods { get; } = [];
-    public bool DoReturn404IfFail { get; set; } = true;
 
     #region Attribute Controls
     public void OverrideAttributes(Assembly assembly)

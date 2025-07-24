@@ -27,9 +27,9 @@ public class WebSocketSender : ServerSender
             return;
         if (Server is not IWSServer webSocketServer)
             return;
-        foreach (var item in webSocketServer.WSAttributeToMethods.Where(x=>x.Key.ListenMethod.HasFlag(currentMethod)))
+        foreach (var item in webSocketServer.WSAttributeToMethods.Where(x => x.Key.ListenMethod.HasFlag(currentMethod)))
         {
-            if (UrlHelper.Match(CachedURL, item.Key.Url, out Dictionary<string, string> out_params) || item.Key.Url == CachedURL)
+            if (item.Key.Url == CachedURL || UrlHelper.Match(CachedURL, item.Key.Url, out Dictionary<string, string> out_params))
             {
                 Log.Verbose($"URL Matched! {CachedURL}");
                 Request.PopulateHeaders(Headers);

@@ -10,15 +10,15 @@ namespace ModdableWebServer.Servers;
 
 public class HTTP_Server : HttpServer, IServer
 {
+    public bool DoReturn404IfFail { get; set; } = true;
+    public Dictionary<HTTPAttribute, MethodInfo> HTTPAttributeToMethods { get; } = [];
+    public Dictionary<HTTPHeaderAttribute, MethodInfo> HeaderAttributeToMethods { get; } = [];
+
     public HTTP_Server(string address, int port) : base(address, port) { }
     public HTTP_Server(IPAddress address, int port) : base(address, port) { }
     public HTTP_Server(DnsEndPoint endpoint) : base(endpoint) { }
     public HTTP_Server(IPEndPoint endPoint) : base(endPoint) { }
-    public Dictionary<HTTPAttribute, MethodInfo> HTTPAttributeToMethods { get; } = [];
-    public Dictionary<HTTPHeaderAttribute, MethodInfo> HeaderAttributeToMethods { get; } = [];
-
-    public bool DoReturn404IfFail { get; set; } = true;
-
+    
     #region Attribute Controls
 
     public void OverrideAttributes(Assembly assembly)

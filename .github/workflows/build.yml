@@ -15,16 +15,19 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 9.0.x
+#    - name: Setup .NET
+#      uses: actions/setup-dotnet@v4
+#      with:
+#        dotnet-version: 9.0.x
 
     - name: Build net8
-      run: dotnet build ModdableWebServer/ModdableWebServer.csproj -f net8.0 -o Out/net8
+      run: dotnet build ModdableWebServer/ModdableWebServer.csproj -c Release -f net8.0 -o Out/net8
 
     - name: Build net9
-      run: dotnet build ModdableWebServer/ModdableWebServer.csproj -f net9.0 -o Out/net9
+      run: dotnet build ModdableWebServer/ModdableWebServer.csproj -c Release -f net9.0 -o Out/net9
+
+    - name: Build pack
+      run: dotnet pack ModdableWebServer/ModdableWebServer.csproj -c Release -o Out
 
     - name: Test
       run: dotnet test ModdableWebServer.Test/ModdableWebServer.Test.csproj

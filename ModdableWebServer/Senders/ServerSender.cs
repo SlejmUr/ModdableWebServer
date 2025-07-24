@@ -33,7 +33,7 @@ public class ServerSender
         bool Sent = false;
         foreach (var item in Server.HTTPAttributeToMethods)
         {
-            if ((UrlHelper.Match(url, item.Key.Url, out Dictionary<string, string> out_params) || item.Key.Url == url) &&
+            if ((item.Key.Url == url || UrlHelper.Match(url, item.Key.Url, out Dictionary<string, string> out_params)) &&
                 Request.Method.Equals(item.Key.Method, StringComparison.CurrentCultureIgnoreCase))
             {
                 Log.Verbose($"URL Matched! {url}");
@@ -45,7 +45,7 @@ public class ServerSender
         }
         foreach (var item in Server.HeaderAttributeToMethods)
         {
-            if ((UrlHelper.Match(url, item.Key.Url, out Dictionary<string, string> out_params) || item.Key.Url == url) &&
+            if ((item.Key.Url == url || UrlHelper.Match(url, item.Key.Url, out Dictionary<string, string> out_params)) &&
                 Request.Method.Equals(item.Key.Method, StringComparison.CurrentCultureIgnoreCase))
             {
                 Log.Verbose($"URL Matched! {url}");
