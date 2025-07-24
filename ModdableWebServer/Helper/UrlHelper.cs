@@ -15,7 +15,7 @@ public static class UrlHelper
         string[] patternParts = SplitUrl(pattern);
 
         int urlLen = urlParts.Where(static x => !x.Contains('=')).ToArray().Length;
-        int patternLen = patternParts.Where(static x => !x.Contains("!args")).ToArray().Length;
+        int patternLen = patternParts.Where(static x => !x.Contains('=') && !x.Contains("!args")).ToArray().Length;
 
         ReasonFail = $"Pattern len not same!\n {urlLen} != {patternLen}\nUrlParts:{string.Join(" ", urlParts)}\nPatternPaths: {string.Join(" ", patternParts)}";
 
