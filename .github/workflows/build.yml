@@ -24,13 +24,13 @@ jobs:
       run: dotnet restore
 
     - name: Build net8
-      run: dotnet build ModdableWebServer/ModdableWebServer.csproj -v:n -f net8.0 -o Out/net8
+      run: dotnet build ModdableWebServer/ModdableWebServer.csproj -v:m -f net8.0 -o Out/net8
 
     - name: Build net9
-      run: dotnet build ModdableWebServer/ModdableWebServer.csproj -v:n -f net9.0 -o Out/net9
+      run: dotnet build ModdableWebServer/ModdableWebServer.csproj -v:m -f net9.0 -o Out/net9
 
     - name: Test
-      run: dotnet test -v:n
+      run: dotnet test ModdableWebServer.Test/ModdableWebServer.Test.csproj -v:m
 
     - name : Upload
       uses: actions/upload-artifact@v4.3.5
