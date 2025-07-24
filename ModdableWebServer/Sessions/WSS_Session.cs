@@ -49,15 +49,15 @@ public class WSS_Session(WssServer server) : WssSession(server), IWSSession
     public override void OnWsConnected(HttpRequest request)
     {
         Sender.Send(WebSocketMethodListen.Connected, request);
-        Log.Verbose("Request sent!");
+        Log.Verbose("OnWsConnected!");
     }
 
-    public override void OnWsConnecting(HttpRequest request)
+    public override bool OnWsConnecting(HttpRequest request, HttpResponse response)
     {
+        Log.Verbose("OnWsConnecting!");
         Sender.Send(WebSocketMethodListen.Connecting, request);
-        Log.Verbose("Request sent!");
+        return base.OnWsConnecting(request, response);
     }
-
 
     public override void OnWsReceived(byte[] buffer, long offset, long size)
     {
@@ -65,19 +65,19 @@ public class WSS_Session(WssServer server) : WssSession(server), IWSSession
         Sender.Offset = offset;
         Sender.Size = size;
         Sender.Send(WebSocketMethodListen.Received, null);
-        Log.Verbose("Request sent!");
+        Log.Verbose("OnWsReceived!");
     }
 
     public override void OnWsDisconnected()
     {
         Sender.Send(WebSocketMethodListen.Disconnected, null);
-        Log.Verbose("Request sent!");
+        Log.Verbose("OnWsDisconnected!");
     }
 
     public override void OnWsDisconnecting()
     {
         Sender.Send(WebSocketMethodListen.Disconnecting, null);
-        Log.Verbose("Request sent!");
+        Log.Verbose("OnWsDisconnecting!");
     }
 
     public override void OnWsPing(byte[] buffer, long offset, long size)
@@ -87,7 +87,7 @@ public class WSS_Session(WssServer server) : WssSession(server), IWSSession
         Sender.Size = size;
         base.OnWsPing(buffer, offset, size);
         Sender.Send(WebSocketMethodListen.Ping, null);
-        Log.Verbose("Request sent!");
+        Log.Verbose("OnWsPing!");
     }
 
     public override void OnWsPong(byte[] buffer, long offset, long size)
@@ -96,7 +96,7 @@ public class WSS_Session(WssServer server) : WssSession(server), IWSSession
         Sender.Offset = offset;
         Sender.Size = size;
         Sender.Send(WebSocketMethodListen.Pong, null);
-        Log.Verbose("Request sent!");
+        Log.Verbose("OnWsPong!");
     }
 
     public override void OnWsClose(byte[] buffer, long offset, long size, int status = 1000)
@@ -106,7 +106,7 @@ public class WSS_Session(WssServer server) : WssSession(server), IWSSession
         Sender.Size = size;
         Sender.CloseStatus = status;
         Sender.Send(WebSocketMethodListen.Close, null);
-        Log.Verbose("Request sent!");
+        Log.Verbose("OnWsClose!");
         base.OnWsClose(buffer, offset, size, status);
     }
 

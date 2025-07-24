@@ -20,7 +20,6 @@ public class WSS_Server : WssServer, IWSServer
     public WSS_Server(SslContext context, DnsEndPoint endPoint) : base(context, endPoint) { }
     public WSS_Server(SslContext context, IPEndPoint endPoint) : base(context, endPoint) { }
 
-    #region Attribute Controls
     public void OverrideAttributes(Assembly assembly)
     {
         HeaderAttributeToMethods.Override(assembly);
@@ -42,12 +41,8 @@ public class WSS_Server : WssServer, IWSServer
         HTTPAttributeToMethods.Clear();
     }
 
-    #endregion
-
-    #region Overrides
     protected override void OnStarted() => ServerEvents.OnStarted(this);
     protected override void OnStopped() => ServerEvents.OnStopped(this);
     protected override SslSession CreateSession() => new WSS_Session(this);
     protected override void OnError(SocketError error) => ServerEvents.OnSocketError(this, error);
-    #endregion
 }

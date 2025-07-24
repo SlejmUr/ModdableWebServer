@@ -20,7 +20,6 @@ public class WS_Server : WsServer, IWSServer
     public WS_Server(DnsEndPoint endPoint) : base(endPoint) { }
     public WS_Server(IPEndPoint endPoint) : base(endPoint) { }
 
-    #region Attribute Controls
     public void OverrideAttributes(Assembly assembly)
     {
         HeaderAttributeToMethods.Override(assembly);
@@ -42,12 +41,8 @@ public class WS_Server : WsServer, IWSServer
         HTTPAttributeToMethods.Clear();
     }
 
-    #endregion
-
-    #region Overrides
     protected override void OnStarted() => ServerEvents.OnStarted(this);
     protected override void OnStopped() => ServerEvents.OnStopped(this);
     protected override TcpSession CreateSession() => new WS_Session(this);
     protected override void OnError(SocketError error) => ServerEvents.OnSocketError(this, error);
-    #endregion
 }
