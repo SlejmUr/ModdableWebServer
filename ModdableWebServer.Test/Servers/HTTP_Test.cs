@@ -1,6 +1,8 @@
+using NetCoreServer;
+
 namespace ModdableWebServer.Servers.Test;
 
-public class HTTP_ServerTest
+public class HTTP_Test
 {
     HTTP_Server server;
     HttpClientEx client;
