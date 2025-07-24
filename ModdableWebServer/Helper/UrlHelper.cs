@@ -53,6 +53,20 @@ public static class UrlHelper
     private static bool ParseParameter(string urlPart, string patternPart, ref Dictionary<string, string> vals)
     {
         string paramName = ExtractParameter(patternPart);
+        if (!string.IsNullOrEmpty(paramName))
+        {
+            vals.Add(
+            paramName.Replace("{", string.Empty).Replace("}", string.Empty),
+                urlPart.Split('=').Last());
+            return true;
+        }
+        if (!urlPart.Equals(patternPart))
+        {
+            vals = [];
+            return false;
+        }
+        return true;
+        /*
         if (string.IsNullOrEmpty(paramName))
         {
             // no pattern
@@ -68,18 +82,8 @@ public static class UrlHelper
             paramName.Replace("{", string.Empty).Replace("}", string.Empty),
                 urlPart.Split('=').Last());
         }
-         
-        /*
-        string paramName = ExtractParameter(patternPart);
-        Log.Verbose("URL Part: {Path} PatternPath {Path} ", urlPart, patternPart);
-        if (string.IsNullOrEmpty(paramName) || !urlPart.Equals(patternPart))
-            return false;
-        if (!string.IsNullOrEmpty(paramName))
-            vals.Add(
-            paramName.Replace("{", string.Empty).Replace("}", string.Empty),
-            urlPart.Split('=').Last());
-        */
         return true;
+        */
     }
 
     private static string ExtractParameter(string pattern)
