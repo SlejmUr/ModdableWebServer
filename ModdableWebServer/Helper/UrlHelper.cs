@@ -2,7 +2,7 @@
 
 public static class UrlHelper
 {
-    public static string ReasonFail { get; protected set; }
+    public static string ReasonFail { get; internal set; }
 
     #region Parameter url stuff
     public static bool Match(string url, string pattern, out Dictionary<string, string> vals)
