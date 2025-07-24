@@ -66,24 +66,6 @@ public static class UrlHelper
             return false;
         }
         return true;
-        /*
-        if (string.IsNullOrEmpty(paramName))
-        {
-            // no pattern
-            if (!urlPart.Equals(patternPart))
-            {
-                vals = [];
-                return false;
-            }
-        }
-        else
-        {
-            vals.Add(
-            paramName.Replace("{", string.Empty).Replace("}", string.Empty),
-                urlPart.Split('=').Last());
-        }
-        return true;
-        */
     }
 
     private static string ExtractParameter(string pattern)

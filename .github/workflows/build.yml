@@ -20,9 +20,6 @@ jobs:
       with:
         dotnet-version: 9.0.x
 
-    - name: Restore
-      run: dotnet restore
-
     - name: Build net8
       run: dotnet build ModdableWebServer/ModdableWebServer.csproj -f net8.0 -o Out/net8
 
