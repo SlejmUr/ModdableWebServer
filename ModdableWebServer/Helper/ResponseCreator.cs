@@ -1,6 +1,4 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace ModdableWebServer.Helper;
+﻿namespace ModdableWebServer.Helper;
 
 public class ResponseCreator
 {

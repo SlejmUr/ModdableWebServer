@@ -12,7 +12,7 @@ public class HTTPS_Server : HttpsServer, IServer
 {
     public bool DoReturn404IfFail { get; set; } = true;
     public Dictionary<HTTPAttribute, MethodInfo> HTTPAttributeToMethods { get; } = [];
-    public Dictionary<HTTPHeaderAttribute, MethodInfo> HeaderAttributeToMethods { get; }= [];
+    public Dictionary<HTTPHeaderAttribute, MethodInfo> HeaderAttributeToMethods { get; } = [];
 
     public HTTPS_Server(SslContext context, string address, int port) : base(context, address, port) { }
     public HTTPS_Server(SslContext context, IPAddress address, int port) : base(context, address, port) { }

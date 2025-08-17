@@ -48,10 +48,9 @@ public static class AttributeMethodHelper
         Dictionary<T, MethodInfo> values = [];
 
         foreach (var method in assembly.GetTypes().SelectMany(select =>
-            select.GetMethods().Where(method => 
-                method.IsDefined(typeof(T)) && 
-                (method.ReturnType == typeof(void) || method.ReturnType == typeof(bool)
-                )
+            select.GetMethods().Where(method =>
+                method.IsDefined(typeof(T)) &&
+                (method.ReturnType == typeof(void) || method.ReturnType == typeof(bool))
             )
         ))
         {
@@ -62,7 +61,7 @@ public static class AttributeMethodHelper
                 continue;
             foreach (var attrib in attribs)
             {
-                if (attrib == null) 
+                if (attrib == null)
                     continue;
                 values.Add(attrib, method);
             }

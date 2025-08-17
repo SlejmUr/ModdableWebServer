@@ -11,7 +11,7 @@ public class WebSocketSender : ServerSender
     public int CloseStatus { get; set; }
 
     private string? CachedURL;
-    
+
     public WebSocketMethodListen CurrentMethod { get; protected set; }
 
     public void Send(WebSocketMethodListen currentMethod, HttpRequest? request = null)

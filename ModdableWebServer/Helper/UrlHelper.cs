@@ -14,21 +14,18 @@ public static class UrlHelper
         string[] urlParts = SplitUrl(url);
         string[] patternParts = SplitUrl(pattern);
 
-        int urlLen = urlParts.Where(static x => !x.Contains('=')).ToArray().Length;
-        int patternLen = patternParts.Where(static x => !x.Contains('=') && !x.Contains("!args")).ToArray().Length;
-
-        ReasonFail = $"Pattern len not same!\n {urlLen} != {patternLen}\nUrlParts:{string.Join(" ", urlParts)}\nPatternPaths: {string.Join(" ", patternParts)}";
+        int urlLen = urlParts.Count(static x => !x.Contains('='));
+        int patternLen = patternParts.Count(static x => !x.Contains('=') && !x.Contains("!args"));
 
         if (urlLen != patternLen)
+        {
+            ReasonFail = $"Pattern len not same!\n {urlLen} != {patternLen}\nUrlParts:{string.Join(" ", urlParts)}\nPatternPaths: {string.Join(" ", patternParts)}";
             return false;
+        }
 
-        Log.Verbose("URL Parts: " + string.Join(" ", urlParts));
-        Log.Verbose("Pattern Paths: " + string.Join(" ", patternParts));
 
         // TODO: fix this shit show.
-        bool hasArg = patternParts.Length >= 1 && 
-            pattern.Contains('?') && 
-            pattern.Split("?")[1] == "{!args}";
+        bool hasArg = pattern.EndsWith("{!args}");
 
         // Normal parameter parsing.
         for (int i = 0; i < urlParts.Length; i++)

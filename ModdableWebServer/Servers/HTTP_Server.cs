@@ -12,7 +12,7 @@ public class HTTP_Server : HttpServer, IServer
 {
     public bool DoReturn404IfFail { get; set; } = true;
     public Dictionary<HTTPAttribute, MethodInfo> HTTPAttributeToMethods { get; } = [];
-    public Dictionary<HTTPHeaderAttribute, MethodInfo> HeaderAttributeToMethods { get; }= [];
+    public Dictionary<HTTPHeaderAttribute, MethodInfo> HeaderAttributeToMethods { get; } = [];
 
     public HTTP_Server(string address, int port) : base(address, port) { }
     public HTTP_Server(IPAddress address, int port) : base(address, port) { }
@@ -36,7 +36,7 @@ public class HTTP_Server : HttpServer, IServer
         HeaderAttributeToMethods.Clear();
         HTTPAttributeToMethods.Clear();
     }
-    
+
     protected override void OnStarted() => ServerEvents.OnStarted(this);
     protected override void OnStopped() => ServerEvents.OnStopped(this);
     protected override TcpSession CreateSession() => new HTTP_Session(this);

@@ -19,7 +19,7 @@ public class WS_Session(WsServer server) : WsSession(server), IWSSession
             Session = this
         };
     }
-    
+
     protected override void OnReceivedRequest(HttpRequest request)
     {
         if (request.Method == "GET" && !request.Url.Contains('?') && Cache.FindPath(request.Url))
