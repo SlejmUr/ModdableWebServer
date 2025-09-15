@@ -16,10 +16,4 @@ public interface ISession
     long Send(string text);
 
     bool IsDisposed { get; }
-
-    HttpResponse Response { get; }
-
-    long SendResponse();
-
-    long SendResponse(HttpResponse response);
 }

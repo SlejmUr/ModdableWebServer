@@ -2,6 +2,7 @@
 using ModdableWebServer.Helper;
 using ModdableWebServer.Interfaces;
 using ModdableWebServer.Sessions;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
@@ -20,6 +21,7 @@ public class WSS_Server : WssServer, IWSServer
     public WSS_Server(SslContext context, DnsEndPoint endPoint) : base(context, endPoint) { }
     public WSS_Server(SslContext context, IPEndPoint endPoint) : base(context, endPoint) { }
 
+    [RequiresUnreferencedCode($"This require to get all assembly type.")]
     public void OverrideAttributes(Assembly assembly)
     {
         HeaderAttributeToMethods.Override(assembly);
@@ -27,11 +29,26 @@ public class WSS_Server : WssServer, IWSServer
         HTTPAttributeToMethods.Override(assembly);
     }
 
+    [RequiresUnreferencedCode($"This require to get all assembly type.")]
     public void MergeAttributes(Assembly assembly)
     {
         HeaderAttributeToMethods.Merge(assembly);
         WSAttributeToMethods.Merge(assembly);
         HTTPAttributeToMethods.Merge(assembly);
+    }
+
+    public void OverrideAttributes([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)] Type? type)
+    {
+        HeaderAttributeToMethods.Override(type);
+        WSAttributeToMethods.Override(type);
+        HTTPAttributeToMethods.Override(type);
+    }
+
+    public void MergeAttributes([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)] Type? type)
+    {
+        HeaderAttributeToMethods.Merge(type);
+        WSAttributeToMethods.Merge(type);
+        HTTPAttributeToMethods.Merge(type);
     }
 
     public void ClearAttributes()

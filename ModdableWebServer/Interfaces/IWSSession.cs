@@ -1,6 +1,6 @@
 ﻿namespace ModdableWebServer.Interfaces;
 
-public interface IWSSession : ISession
+public interface IWSSession : IHttpSession
 {
     bool Close();
     bool Close(int status);
@@ -20,9 +20,5 @@ public interface IWSSession : ISession
 
     long SendClose(int status, ReadOnlySpan<char> text);
     long SendClose(int status, ReadOnlySpan<byte> buffer);
-
-
-
-
 }
 

@@ -7,12 +7,11 @@ namespace ModdableWebServer.Senders;
 
 public class ServerSender
 {
-    public required ISession Session { get; init; }
-    public required IServer Server { get; init; }
+    public required IHttpSession Session { get; init; }
+    public required IHttpServer Server { get; init; }
     public HttpRequest Request { get; internal set; } = default!;
     public Dictionary<string, string> Headers { get; } = [];
     public Dictionary<string, string> Parameters { get; internal set; } = [];
-    public ServerType ServerType { get; init; }
     public HttpResponse Response => Session.Response;
 
     public virtual void SendResponse()

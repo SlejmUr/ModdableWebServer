@@ -23,8 +23,6 @@ public static class UrlHelper
             return false;
         }
 
-
-        // TODO: fix this shit show.
         bool hasArg = pattern.EndsWith("{!args}");
 
         // Normal parameter parsing.

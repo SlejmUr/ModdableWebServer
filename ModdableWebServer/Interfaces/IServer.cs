@@ -1,16 +1,10 @@
-﻿using ModdableWebServer.Attributes;
-using System.Net;
-using System.Reflection;
+﻿using System.Net;
 
 namespace ModdableWebServer.Interfaces;
 
 public interface IServer
 {
     bool DoReturn404IfFail { get; set; }
-
-    Dictionary<HTTPAttribute, MethodInfo> HTTPAttributeToMethods { get; }
-    Dictionary<HTTPHeaderAttribute, MethodInfo> HeaderAttributeToMethods { get; }
-
     Guid Id { get; }
     string Address { get; }
     int Port { get; }

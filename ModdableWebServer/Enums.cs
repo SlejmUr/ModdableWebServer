@@ -1,13 +1,5 @@
 ﻿namespace ModdableWebServer;
 
-public enum ServerType
-{
-    HTTP,
-    HTTPS,
-    WS,
-    WSS
-};
-
 [Flags]
 public enum WebSocketMethodListen
 {

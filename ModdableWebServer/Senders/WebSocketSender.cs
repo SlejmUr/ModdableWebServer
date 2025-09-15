@@ -5,13 +5,11 @@ namespace ModdableWebServer.Senders;
 
 public class WebSocketSender : ServerSender
 {
+    private string? CachedURL;
     public byte[] Buffer { get; set; } = [];
     public long Offset { get; set; }
     public long Size { get; set; }
     public int CloseStatus { get; set; }
-
-    private string? CachedURL;
-
     public WebSocketMethodListen CurrentMethod { get; protected set; }
 
     public void Send(WebSocketMethodListen currentMethod, HttpRequest? request = null)
@@ -33,7 +31,8 @@ public class WebSocketSender : ServerSender
             if (item.Key.Url == CachedURL || UrlHelper.Match(CachedURL, item.Key.Url, out out_params))
             {
                 Log.Verbose($"URL Matched! {CachedURL}");
-                Request.PopulateHeaders(Headers);
+                Request?.PopulateHeaders(Headers);
+
                 // ONLY Connecting/Connected has headers, other stuff NOT!!
                 Parameters = out_params;
                 item.Value.Invoke(Server, [this]);

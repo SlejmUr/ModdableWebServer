@@ -2,13 +2,14 @@
 using ModdableWebServer.Helper;
 using ModdableWebServer.Interfaces;
 using ModdableWebServer.Sessions;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 
 namespace ModdableWebServer.Servers;
 
-public class HTTP_Server : HttpServer, IServer
+public class HTTP_Server : HttpServer, IHttpServer
 {
     public bool DoReturn404IfFail { get; set; } = true;
     public Dictionary<HTTPAttribute, MethodInfo> HTTPAttributeToMethods { get; } = [];
@@ -19,16 +20,30 @@ public class HTTP_Server : HttpServer, IServer
     public HTTP_Server(DnsEndPoint endpoint) : base(endpoint) { }
     public HTTP_Server(IPEndPoint endPoint) : base(endPoint) { }
 
+    [RequiresUnreferencedCode($"This require to get all assembly type.")]
     public void OverrideAttributes(Assembly assembly)
     {
         HeaderAttributeToMethods.Override(assembly);
         HTTPAttributeToMethods.Override(assembly);
     }
 
+    [RequiresUnreferencedCode($"This require to get all assembly type.")]
     public void MergeAttributes(Assembly assembly)
     {
         HeaderAttributeToMethods.Merge(assembly);
         HTTPAttributeToMethods.Merge(assembly);
+    }
+
+    public void OverrideAttributes([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)] Type? type)
+    {
+        HeaderAttributeToMethods.Override(type);
+        HTTPAttributeToMethods.Override(type);
+    }
+
+    public void MergeAttributes([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)] Type? type)
+    {
+        HeaderAttributeToMethods.Merge(type);
+        HTTPAttributeToMethods.Merge(type);
     }
 
     public void ClearAttributes()

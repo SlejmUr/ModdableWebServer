@@ -5,7 +5,6 @@ public static class RequestExport
     public static Dictionary<string, string> GetHeaders(this HttpRequest request)
     {
         Dictionary<string, string> Headers = [];
-        Headers.Clear();
         for (int i = 0; i < request.Headers; i++)
         {
             var headerpart = request.Header(i);

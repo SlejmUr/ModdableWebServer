@@ -4,7 +4,7 @@ using System.Net.Sockets;
 
 namespace ModdableWebServer.Sessions;
 
-public class HTTP_Session(HttpServer server) : HttpSession(server), ISession
+public class HTTP_Session(HttpServer server) : HttpSession(server), IHttpSession
 {
     public IServer IServer => (IServer)Server;
     private ServerSender Sender = default!;
@@ -13,8 +13,7 @@ public class HTTP_Session(HttpServer server) : HttpSession(server), ISession
     {
         Sender = new()
         {
-            ServerType = ServerType.HTTP,
-            Server = IServer,
+            Server = (IHttpServer)Server,
             Session = this
         };
     }

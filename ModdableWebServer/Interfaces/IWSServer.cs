@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace ModdableWebServer.Interfaces;
 
-public interface IWSServer : IServer
+public interface IWSServer : IHttpServer
 {
     Dictionary<WSAttribute, MethodInfo> WSAttributeToMethods { get; }
 

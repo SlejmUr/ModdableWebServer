@@ -14,8 +14,7 @@ public class WSS_Session(WssServer server) : WssSession(server), IWSSession
     {
         Sender = new()
         {
-            ServerType = ServerType.WSS,
-            Server = IServer,
+            Server = (IHttpServer)IServer,
             Session = this
         };
     }
