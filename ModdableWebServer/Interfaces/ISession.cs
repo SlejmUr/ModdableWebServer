@@ -1,12 +1,9 @@
-﻿using System.Net.Sockets;
-
-namespace ModdableWebServer.Interfaces;
+﻿namespace ModdableWebServer.Interfaces;
 
 public interface ISession
 {
     Guid Id { get; }
     IServer IServer { get; }
-    Socket Socket { get; }
     bool IsConnected { get; }
 
     bool Disconnect();

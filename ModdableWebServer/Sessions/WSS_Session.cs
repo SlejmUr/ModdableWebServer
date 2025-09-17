@@ -41,7 +41,7 @@ public class WSS_Session(WssServer server) : WssSession(server), IWSSession
         if (!isSent)
             ServerEvents.OnReceivedFailed(IServer, request);
 
-        if (IServer.DoReturn404IfFail && !isSent)
+        if (IServer is IHttpServer { DoReturn404IfFail: true } && !isSent)
             SendResponse(Response.MakeErrorResponse(404));
     }
 

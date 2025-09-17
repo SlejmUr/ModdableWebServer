@@ -32,7 +32,7 @@ public class HTTP_Session(HttpServer server) : HttpSession(server), IHttpSession
         if (!isSent)
             ServerEvents.OnReceivedFailed(IServer, request);
 
-        if (IServer.DoReturn404IfFail && !isSent)
+        if (IServer is IHttpServer { DoReturn404IfFail: true } && !isSent)
             SendResponse(Response.MakeErrorResponse(404));
     }
 

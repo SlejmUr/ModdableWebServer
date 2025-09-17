@@ -4,7 +4,6 @@ namespace ModdableWebServer.Interfaces;
 
 public interface IServer
 {
-    bool DoReturn404IfFail { get; set; }
     Guid Id { get; }
     string Address { get; }
     int Port { get; }
@@ -20,5 +19,4 @@ public interface IServer
     bool Multicast(ReadOnlySpan<char> text);
 
     bool IsDisposed { get; }
-    bool IsSocketDisposed { get; }
 }
